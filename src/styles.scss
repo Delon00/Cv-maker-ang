@@ -1,1 +1,79 @@
-/* You can add global styles to this file, and also import other style files */
+/* Add these directives at the top of the file */
+@use "tailwindcss";
+
+.main-btn {
+    border-radius: 15px;
+    background-image: linear-gradient(to right, #f97316, #ea580c);
+    background-size: 200% auto;
+    color: white;
+    border: 1px solid white;
+    padding: 0.75rem 2rem;
+    font-size: 1.125rem;
+    font-weight: 500;
+    cursor: pointer;
+
+    box-shadow:
+        0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -4px rgba(0, 0, 0, 0.1);
+
+    transition:
+        background-image 0.3s ease-in-out,
+        font-size 0.3s ease-in-out,
+        border-radius 0.3s ease-in-out,
+        color 0.3s ease-in-out;
+
+    &:hover {
+        background-image: linear-gradient(to right, #fb923c, #f97316);
+        border-radius: 18px;
+        color: #000;
+
+    }
+
+    &:active {
+        background-image: linear-gradient(to right, #c2410c, #9a3412);
+    }
+}
+.nd-btn{
+    background: rgba(255, 255, 255, 0.80);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #000;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 0.75rem 2rem;
+    font-size: 1.125rem;
+    font-weight: 500;
+    cursor: pointer;
+
+    box-shadow:
+        0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -4px rgba(0, 0, 0, 0.1);
+
+    transition:
+        background-image 0.3s ease-in-out,
+        font-size 0.3s ease-in-out,
+        border-radius 0.3s ease-in-out,
+        color 0.3s ease-in-out;
+
+    &:hover {
+        background:#fff;
+        border-radius: 18px;
+        color: #f97316;
+
+    }
+
+    &:active {
+        background-image: linear-gradient(to right, #c2410c, #9a3412);
+    }
+}
+
+.logo {
+    width: 60px;
+    height: auto;
+}
+
+.message-error{
+    color: red;
+}

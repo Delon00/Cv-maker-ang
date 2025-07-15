@@ -1,0 +1,37 @@
+nav{
+
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    z-index: 999;
+
+    section{
+        margin-top: 1rem;
+        padding: 0.1rem 1.5rem;
+        background: rgba(255, 255, 255, 0.019);
+        border-radius: 16px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(14.7px);
+        -webkit-backdrop-filter: blur(14.7px);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 80%;
+
+        a{
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.2rem;
+            margin-right: 1rem;
+            transition: color 0.3s ease;
+
+            &:hover {
+                color: #faa86e; // Tailwind orange-500
+            }
+        }
+    }
+
+}
