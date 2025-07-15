@@ -13,8 +13,17 @@
                     <input formControlName="password" type="password" id="password" placeholder="********" class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"/>
                 </div>
                 @if (passwordError) {<p class="message-error">{{ passwordError }}</p>}
-            <button type="submit" class="mt-6 w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-lg transition-colors duration-300">Se connecter</button>
-            <button type="submit" class="mt-6 w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-lg transition-colors duration-300">Linkedin</button>
+                <button type="submit" class="my-4 w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-lg transition-colors duration-300">
+                    @if (!isLoading) {Se connecter}
+                    @else {<i class="pi pi-spin pi-spinner"></i>}
+                </button>
+                <div class="w-full flex justify-between items-center mb-2">
+                    <hr class="border border-gray-300 my-3 w-full" />
+                    <p class="mx-4">ou</p>
+                    <hr class="border border-gray-300 my-3 w-full" />
+                </div>
+            <button type="button" (click)="LinkedinLog()" class="linkedin-btn py-2 transition-colors duration-300"><i class="pi pi-linkedin mx-2"></i>Linkedin</button>
+            <a routerLink="/register" class="mt-6 my-2 hover:text-orange-500">Je suis pas encore inscris ☝️🤓</a>
         </form>
     </section>
 </main>

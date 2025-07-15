@@ -3,14 +3,14 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from '@services/user.service';
 import { LocalStorageService } from '@services/local-storage.service';
-import { Router } from '@angular/router';
-
+import { Router,RouterLink } from '@angular/router';
+import FormErrorChecker from '@utils/formErrorChecker';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
   standalone: true,
-  imports: [ReactiveFormsModule]
+  imports: [ReactiveFormsModule, RouterLink]
 })
 export class LoginComponent implements OnInit {
   formLogin!: FormGroup;
@@ -38,11 +38,12 @@ export class LoginComponent implements OnInit {
       this.userService.login(this.formLogin.value).subscribe({
         next: (response: any) => {
           this.userService.saveUserData(response.user);
-          this.localStorage.createToken(response.token);
+          this.localStorage.createToken(response.accessToken);
           console.log(this.localStorage.getToken());
 
 
-          const userPlan = this.userService.getUserPlan();
+          const userPlan = response.user?.plan;
+          console.log('userPlan:', userPlan);
           if (userPlan === 'admin') {
             this.router.navigate(['/admin']);
           } else {
@@ -68,5 +69,9 @@ export class LoginComponent implements OnInit {
     } else {
       this.errorMessage = "Veuillez remplir correctement le formulaire.";
     }
+  }
+
+  LinkedinLog(){
+
   }
 }

@@ -17,6 +17,7 @@ export const routes: Routes = [
         { path: 'register', component: RegisterComponent, canActivate: [registerGuard] },
         { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
         {path: 'login', component: LoginComponent, canActivate: [homeGuard] },
+        
 
 
         { path: '**', component: NotFoundComponent },

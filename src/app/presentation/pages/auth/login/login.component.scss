@@ -1,11 +1,11 @@
 main{
-    background: #FB923C;
-    background: linear-gradient(60deg, rgba(251, 146, 60, 1) 0%, rgba(194, 117, 54, 1) 23%, rgba(133, 77, 34, 1) 49%, rgba(84, 45, 24, 1) 77%, rgba(33, 18, 9, 1) 100%);
+    background-image: url('/media/login-bg.jpg');
+
     height: 100dvh;
     section{
         height: 100%;
         width: 100%;
-        background: rgba(0, 0, 0, 0.89);
+        background: rgba(0, 0, 0, 0.404);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -20,15 +20,16 @@ main{
             flex-direction: column;
             align-items: center;
             padding: 1rem 2rem;
-            height: 360px;
+            min-height: 400px;
             width: 400px;
             background-color: #fff;
             border-radius: 15px;
             box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
             position: relative;
             overflow: hidden;
+            
 
-            .h1{
+            h1{
                 text-align: center;
                 color: #FB923C;
                 font-size: 2rem;
@@ -72,6 +73,21 @@ main{
                 display: flex;
                 flex-direction: column;
                 justify-content: space-evenly;
+            }
+
+            .linkedin-btn{
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              background-color: #0a66c2;
+              color: #fff;
+              font-weight: 600;
+              width: 100%;
+              border-radius: 15px;
+              transition: cubic-bezier(0.075, 0.82, 0.165, 1);
+            }
+            .linkedin-btn:hover{
+              background-color: #07437e;
             }
 
         }

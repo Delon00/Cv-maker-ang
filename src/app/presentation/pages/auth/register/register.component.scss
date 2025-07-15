@@ -1,0 +1,131 @@
+main{
+    background-image: url('/media/login-bg.jpg');
+
+    height: 100dvh;
+    section{
+        height: 100%;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.404);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(0, 0, 0, 0.3);
+        display: flex;
+
+        .form{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem 2rem;
+            min-height: 400px;
+            width: 400px;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+            position: relative;
+            overflow: hidden;
+            
+
+            h1{
+                text-align: center;
+                color: #FB923C;
+                font-size: 2rem;
+                font-weight: bold;
+            }
+            .form::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 1px;
+                background: linear-gradient(90deg,transparent,rgba(255, 255, 255, 0.8),transparent);
+            }
+
+            .form::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 1px;
+                height: 100%;
+                background: linear-gradient(180deg,rgba(255, 255, 255, 0.8),transparent,rgba(255, 255, 255, 0.3));
+            }
+
+
+            input{
+                padding: 0.3rem 0.5rem;
+                border-radius: 10px;
+                background-color: #fff;
+                width: 100%;
+            }
+            .form-group{
+                padding: 0.5rem 0;
+
+                .label{
+                    font-size: 1.1rem;
+                    color: #fff;
+                    margin:0.2rem 0;
+                }
+                display: flex;
+                flex-direction: column;
+                justify-content: space-evenly;
+            }
+
+            .linkedin-btn{
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              background-color: #0a66c2;
+              color: #fff;
+              font-weight: 600;
+              width: 100%;
+              border-radius: 15px;
+              transition: cubic-bezier(0.075, 0.82, 0.165, 1);
+            }
+            .linkedin-btn:hover{
+              background-color: #07437e;
+            }
+
+        }
+    }
+}
+
+.glass-card {
+  width: 240px;
+  height: 360px;
+
+}
+
+.glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.8),
+    transparent
+  );
+}
+
+.glass-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.8),
+    transparent,
+    rgba(255, 255, 255, 0.3)
+  );
+}
