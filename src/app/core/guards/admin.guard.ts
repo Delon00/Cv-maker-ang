@@ -17,9 +17,10 @@ export class AdminGuard implements CanActivate {
 
     if (this.userService.getUserPlan() === 'admin') {
       return true;
+
     } else {
 
-      this.router.navigate(['/unauthorized']);
+      this.router.navigate(['/']);
       return false;
     }
   }

@@ -1,7 +1,7 @@
 export default interface Register {
     email: string;
-    nom: string;
-    prenom: string;
+    lastName: string;
+    firstName: string;
     password: string;
     passwordConfirm: string;
 }

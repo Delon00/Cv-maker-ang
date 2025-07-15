@@ -14,7 +14,7 @@ import decodeJwt from '@utils/decodeJwt';
 })
 export class UserService {
   private authUrl = 'http://localhost:3000/auth';
-  private userUrl = 'http://localhost:3000/user';
+  private userUrl = 'http://localhost:3000/users';
 
   constructor(
     private http: HttpClient,
@@ -65,6 +65,17 @@ export class UserService {
       headers: new HttpHeaders({ 'Authorization': `Bearer ${this.localService.getToken()}` })
     }).pipe(catchError(this.handleError));
   }
+  
+  getAllUsers() {
+    return this.http.get<any[]>(`${this.userUrl}/all`, {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${this.localService.getToken()}`
+      })
+    }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
 
   saveUserData(user: User): void {
     if (typeof window !== 'undefined') {

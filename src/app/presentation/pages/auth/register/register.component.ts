@@ -22,8 +22,8 @@ export class RegisterComponent {
   passwordError: string = '';
   isLoading: boolean = false;
   userRegister: Register = {
-    nom: '',
-    prenom: '',
+    lastName: '',
+    firstName: '',
     email: '',
     password: '',
     passwordConfirm: '',
@@ -33,8 +33,8 @@ export class RegisterComponent {
 
   ngOnInit(): void {
     this.formRegister = new FormGroup({
-      nom: new FormControl('', [Validators.required, Validators.minLength(2)]),
-      prenom: new FormControl('', [Validators.required, Validators.minLength(2)]),
+      lastName: new FormControl('', [Validators.required, Validators.minLength(2)]),
+      firstName: new FormControl('', [Validators.required, Validators.minLength(2)]),
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required, Validators.minLength(8)]),
       passwordConfirm: new FormControl('', [Validators.required]),
@@ -59,7 +59,7 @@ onRegister() {
       },
       error: (error: any) => {
         console.log(error.status, error.message);
-        if (error.status === 400 && error.message === 'Utilisateur déjà existant.') {
+        if (error.status === 409) {
           this.errorMessage = 'Cet email est déjà enregistré. Veuillez utiliser un autre email.';
           this.isLoading = false;
         } else {

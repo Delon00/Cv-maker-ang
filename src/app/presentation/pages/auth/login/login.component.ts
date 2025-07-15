@@ -5,6 +5,7 @@ import { UserService } from '@services/user.service';
 import { LocalStorageService } from '@services/local-storage.service';
 import { Router,RouterLink } from '@angular/router';
 import FormErrorChecker from '@utils/formErrorChecker';
+import decodeJwt from '@app/utils/decodeJwt';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -19,11 +20,7 @@ export class LoginComponent implements OnInit {
   passwordError: string = '';
   isLoading: boolean = false;
 
-  constructor(
-    private router: Router,
-    private userService: UserService,
-    private localStorage: LocalStorageService
-  ) {}
+  constructor(private router: Router,private userService: UserService,private localStorage: LocalStorageService) {}
 
   ngOnInit(): void {
     this.formLogin = new FormGroup({
@@ -39,11 +36,11 @@ export class LoginComponent implements OnInit {
         next: (response: any) => {
           this.userService.saveUserData(response.user);
           this.localStorage.createToken(response.accessToken);
-          console.log(this.localStorage.getToken());
-
+          // console.log('RESPONSE:', response);
+          // console.log('TOKEN:', response.accessToken);
+          // console.log('DECODED:', decodeJwt(response.accessToken));
 
           const userPlan = response.user?.plan;
-          console.log('userPlan:', userPlan);
           if (userPlan === 'admin') {
             this.router.navigate(['/admin']);
           } else {
