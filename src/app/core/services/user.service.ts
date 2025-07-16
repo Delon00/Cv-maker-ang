@@ -1,4 +1,4 @@
-// user.service.ts
+
 import { Injectable } from '@angular/core';
 import { LocalStorageService } from '@services/local-storage.service';
 import User from '@interfaces/user.interface';
@@ -8,13 +8,17 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import decodeJwt from '@utils/decodeJwt';
+import { environment } from '@environments/environment';
+
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private authUrl = 'http://localhost:3000/auth';
-  private userUrl = 'http://localhost:3000/users';
+  private authUrl = environment.authUrl;
+  private userUrl = environment.userUrl;
+
 
   constructor(
     private http: HttpClient,

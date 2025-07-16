@@ -1,1 +1,22 @@
-<p>templates works!</p>
+<app-navbar></app-navbar>
+<main>
+    <section>
+        <h1>Templates</h1>
+        @if (templates.length === 0) {
+            <p class="text-gray-500">Aucun template trouvé.</p>
+        } @else {
+            <div class="cv-grid">
+                @for (template of templates; track template.id) {
+                    <a [routerLink]="['/cv-editor', template.id]" class="cv-card">
+                        <div class="cv-name">
+                            <p class="font-semibold text-lg">{{ template.name }}</p>
+                        </div>
+                        @if (template.previewUrl) {
+                            <img [src]="template.previewUrl" alt="Preview du template" class="mt-2 w-full h-auto rounded" />
+                        }
+                    </a>
+                }
+            </div>
+        }
+    </section>
+</main>

@@ -27,8 +27,9 @@
       "@interfaces/*":["src/app/domain/interfaces/*"],
       "@utils/*":["src/app/utils/*"],
       "@pages/*":["src/app/presentation/pages/*"],
-      "@shared/*":["src/app/presentation/shared/*"],
-      "@layout/*":["src/app/presentation/layout/*"],
+      "@shared/*":["src/app/presentation/components/shared/*"],
+      "@layout/*":["src/app/presentation/components/layout/*"],
+      "@env/*":["src/environments/*"],
     }
   },
   "angularCompilerOptions": {

@@ -1,0 +1,14 @@
+<main>
+    <form [formGroup]="formCvSimple" (ngSubmit)="onSave()">
+        <section class="info">
+            <div>
+                <label for="lastName">Nom</label>
+                <input type="text" formControlName="lastName" id="lastName" value="">
+            </div>
+            <div>
+                <label for="firstName">Prénom</label>
+                <input type="text" formControlName="firstName" id="firstName">
+            </div>
+        </section>
+    </form>
+</main>

@@ -12,6 +12,8 @@ import { RegisterComponent } from './presentation/pages/auth/register/register.c
 import { NotFoundComponent } from './presentation/pages/errors/not-found/not-found.component';
 import { AdminComponent } from './presentation/pages/admin/admin.component';
 import { TemplatesComponent } from './presentation/pages/templates/templates.component';
+import { SimpleComponent } from './presentation/pages/templates/cvs/simple/simple.component';
+
 
 
 export const routes: Routes = [
@@ -20,6 +22,7 @@ export const routes: Routes = [
         { path: 'register', component: RegisterComponent, canActivate: [registerGuard] },
         { path: 'login', component: LoginComponent, canActivate: [homeGuard] },
         { path: 'templates', component: TemplatesComponent},
+        { path: 'simple', component: SimpleComponent},
 
         { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
 
