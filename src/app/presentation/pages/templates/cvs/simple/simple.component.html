@@ -1,7 +1,7 @@
 <div class="cv-container">
     <header class="cv-header">
         <h1 class="cv-name">{{ firstName }} {{ lastName }}</h1>
-        <p class="cv-title">Cheffe de projet innovation</p>
+        <p class="cv-title">{{ title }}</p>
         <p class="cv-contact">{{ email }}</p>
         <p class="cv-contact">{{ phone }}</p>
         <p class="cv-contact">{{ city }}</p>
@@ -20,11 +20,9 @@
             <p class="cv-job-date">{{ exp.date }}</p>
             <p class="cv-job-title">{{ exp.title }}</p>
             <p class="cv-job-location">{{ exp.location }}</p>
-            <ul>
-                @for (mission of exp.missions; track mission) {
-                <li>{{ mission }}</li>
-                }
-            </ul>
+                <ul>
+                    @for (mission of exp.missions; track mission) {<li>{{ mission }}</li>}
+                </ul>
             </div>
         }
         </section>
@@ -66,8 +64,8 @@
 
     @if (interests) {
         <section class="cv-section">
-        <h2 class="cv-section-title">CENTRES D’INTÉRÊT</h2>
-        <p>{{ interests }}</p>
+            <h2 class="cv-section-title">CENTRES D’INTÉRÊT</h2>
+            <p>{{ interests }}</p>
         </section>
     }
 

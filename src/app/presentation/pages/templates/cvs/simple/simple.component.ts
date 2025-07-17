@@ -11,6 +11,7 @@ export class SimpleComponent {
     @Input() firstName!: string;
     @Input() email!: string;
     @Input() phone!: string;
+    @Input() title!: string;
     @Input() city!: string;
 
     @Input() profile!: string;

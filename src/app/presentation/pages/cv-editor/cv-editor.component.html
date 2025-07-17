@@ -1,3 +1,4 @@
+<app-navbar></app-navbar>
 <main class="p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
     <!-- Formulaire -->
     <section>
@@ -49,16 +50,26 @@
                 </div>
             </div>
 
-            <!-- Ville -->
-            <div class="mb-4">
-                <label for="city" class="block mb-1 font-semibold">Ville</label>
-                <input type="text" id="city" formControlName="city" class="border p-2 w-full rounded">
-                @if (formCvSimple.get('city')?.touched && formCvSimple.get('city')?.invalid) {
-                    <p class="text-red-500 text-sm mt-1">
-                        {{ formErrors['city'] || 'Champ invalide.' }}
-                    </p>
-                }
+            <div class="flex justify-between w-full gap-2">
+                <!-- Titre -->
+                <div class="mb-4 w-full">
+                    <label for="title" class="block mb-1 font-semibold">Titre professionnel</label>
+                    <input type="text" id="title" formControlName="title" class="border p-2 w-full rounded">
+                    @if (formCvSimple.get('title')?.touched && formCvSimple.get('title')?.invalid) {
+                        <p class="text-red-500 text-sm mt-1">{{ formErrors['title'] || 'Champ invalide.' }}</p>
+                    }
+                </div>
+
+                <!-- Ville -->
+                <div class="mb-4 w-full">
+                    <label for="city" class="block mb-1 font-semibold">Ville</label>
+                    <input type="text" id="city" formControlName="city" class="border p-2 w-full rounded">
+                    @if (formCvSimple.get('city')?.touched && formCvSimple.get('city')?.invalid) {
+                        <p class="text-red-500 text-sm mt-1">{{ formErrors['city'] || 'Champ invalide.' }}</p>
+                    }
+                </div>
             </div>
+
 
             <!-- Profil Professionnel -->
             <div class="mb-4">

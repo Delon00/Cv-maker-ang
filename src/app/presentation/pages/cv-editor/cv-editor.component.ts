@@ -5,11 +5,13 @@ import { CommonModule } from '@angular/common';
 import { UserService } from '@services/user.service';
 import FormErrorChecker from '@app/utils/formErrorChecker';
 import { TemplatesService } from '@services/templates.service';
+import { NavbarComponent } from '@layout/navbar/navbar.component';
+
 
 @Component({
   selector: 'app-cv-editor',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, NavbarComponent],
   templateUrl: './cv-editor.component.html',
   styleUrls: ['./cv-editor.component.scss']
 })
@@ -49,6 +51,7 @@ export class CvEditorComponent implements OnInit {
       firstName: new FormControl(''),
       email: new FormControl(''),
       phone: new FormControl(''),
+      title: new FormControl(''),
       interests: new FormControl(''),
       linkedin: new FormControl(''),
       profile: new FormControl(''),
@@ -58,14 +61,17 @@ export class CvEditorComponent implements OnInit {
 
 
     this.formCvSimple.valueChanges.subscribe(val => {
-  this.previewData = {
-    ...val,
-    experiences: val.experiences?.map((exp: any) => ({
-      ...exp,
-      missions: typeof exp.missions === 'string' ? exp.missions.split('\n') : exp.missions
-    })) ?? []
-  };
-});
+    this.previewData = {
+      ...val,
+      experiences: val.experiences?.map((exp: any) => ({
+        ...exp,
+        missions: typeof exp.missions === 'string'
+          ? exp.missions.split('\n').filter((line: string) => line.trim() !== '')
+          : exp.missions ?? []
+      })) ?? []
+    };
+  });
+
 
 
     this.userService.getUser().subscribe({
@@ -93,7 +99,7 @@ export class CvEditorComponent implements OnInit {
       title: new FormControl(''),
       location: new FormControl(''),
       date: new FormControl(''),
-      missions: new FormArray([])
+      missions: new FormControl('')
     });
     this.experiences.push(experienceGroup);
   }
