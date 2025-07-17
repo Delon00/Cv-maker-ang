@@ -45,7 +45,6 @@ export class CvEditorComponent implements OnInit {
         console.error('Erreur lors de la récupération du template:', err);
       }
     });
-
     this.formCvSimple = new FormGroup({
       lastName: new FormControl(''),
       firstName: new FormControl(''),
@@ -56,8 +55,12 @@ export class CvEditorComponent implements OnInit {
       linkedin: new FormControl(''),
       profile: new FormControl(''),
       city: new FormControl(''),
-      experiences: new FormArray([])
+      experiences: new FormArray([]),
+      educations: new FormArray([]),
+      languages: new FormArray([]),
+      certifications: new FormArray([])
     });
+
 
 
     this.formCvSimple.valueChanges.subscribe(val => {
@@ -91,18 +94,54 @@ export class CvEditorComponent implements OnInit {
     
   }
 
-  get experiences(): FormArray {
-    return this.formCvSimple.get('experiences') as FormArray;
-  }
+  get experiences(): FormArray {return this.formCvSimple.get('experiences') as FormArray;}
+  get educations(): FormArray {return this.formCvSimple.get('educations') as FormArray;}
+  get languages(): FormArray {return this.formCvSimple.get('languages') as FormArray;}
+  get certifications(): FormArray {return this.formCvSimple.get('certifications') as FormArray;}
+
+
+  removeExperience(index: number) {this.experiences.removeAt(index);}
+  removeEducation(index: number) {this.educations.removeAt(index);}
+  removeLanguage(index: number) {this.languages.removeAt(index);}
+  removeCertification(index: number) {this.certifications.removeAt(index);}
 
   addExperience() {
     const experienceGroup = new FormGroup({
       title: new FormControl(''),
       location: new FormControl(''),
-      date: new FormControl(''),
+      startDate: new FormControl(''),
+      endDate: new FormControl(''),
       missions: new FormControl('')
     });
     this.experiences.push(experienceGroup);
+  }
+
+  addEducation() {
+    const educationGroup = new FormGroup({
+      school: new FormControl(''),
+      location: new FormControl(''),
+      field: new FormControl(''),
+      startDate: new FormControl(''),
+      endDate: new FormControl('')
+    });
+    this.educations.push(educationGroup);
+  }
+
+  addCertification() {
+  const certGroup = new FormGroup({
+      title: new FormControl(''),
+      institution: new FormControl(''),
+      date: new FormControl('')
+    });
+    this.certifications.push(certGroup);
+  }
+
+  addLanguage() {
+    const languageGroup = new FormGroup({
+      name: new FormControl(''),
+      level: new FormControl('')
+    });
+    this.languages.push(languageGroup);
   }
 
   onSave() {
