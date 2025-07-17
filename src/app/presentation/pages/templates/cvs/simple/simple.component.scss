@@ -1,0 +1,64 @@
+.cv-container {
+    background-color: #fff;
+    max-width: 800px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+    color: #000;
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 600px;
+}
+
+.cv-header {
+    text-align: left;
+    margin-bottom: 24px;
+}
+
+.cv-name {
+
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+    color: #000;
+}
+
+.cv-title {
+  font-size: 18px;
+  margin: 4px 0;
+}
+
+.cv-contact {
+  margin: 2px 0;
+}
+
+.cv-section {
+  margin-bottom: 20px;
+}
+
+.cv-section-title {
+  font-weight: bold;
+  border-bottom: 1px solid #000;
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.cv-job, .cv-edu {
+  margin-bottom: 12px;
+}
+
+.cv-job-title, .cv-edu-title {
+  font-weight: bold;
+}
+
+.cv-job-date, .cv-edu-date {
+  font-style: italic;
+}
+
+.cv-job-location, .cv-edu-location, .cv-edu-school {
+  font-size: 13px;
+  color: #555;
+}
+
+.cv-skills li {
+  margin-bottom: 4px;
+}

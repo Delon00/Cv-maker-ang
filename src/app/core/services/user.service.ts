@@ -1,5 +1,5 @@
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { LocalStorageService } from '@services/local-storage.service';
 import User from '@interfaces/user.interface';
 import Register from '@interfaces/register.interface';
@@ -20,15 +20,15 @@ export class UserService {
   private userUrl = environment.userUrl;
 
 
-  constructor(
-    private http: HttpClient,
-    private localService: LocalStorageService,
-    private router: Router
-  ) {}
+
+  private http = inject (HttpClient);
+  private localService = inject (LocalStorageService);
+  private router = inject (Router) 
+
 
   private handleError(error: HttpErrorResponse) {
     let errorMessage = '';
-    if (error.error instanceof ErrorEvent) {
+    if (error.error instanceof HttpErrorResponse) {
       console.error('Le client a retourné:', error.error.message);
       errorMessage = error.error.message;
     } else {
@@ -45,10 +45,12 @@ export class UserService {
     try {
       const decoded: any = decodeJwt(token);
       return decoded.userId;
+
     } catch (error) {
       console.error('Erreur lors du décodage du token:', error);
       return null;
     }
+    
   }
 
   getUserPlan(): string | null {
@@ -65,7 +67,7 @@ export class UserService {
 
   getUser(): Observable<any> {
     const userId = this.getUserId();
-    return this.http.get<any>(`${this.userUrl}/getUser/${userId}`, {
+    return this.http.get<any>(`${this.userUrl}/${userId}`, {
       headers: new HttpHeaders({ 'Authorization': `Bearer ${this.localService.getToken()}` })
     }).pipe(catchError(this.handleError));
   }

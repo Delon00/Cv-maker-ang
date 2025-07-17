@@ -1,0 +1,87 @@
+<div class="cv-container">
+    <header class="cv-header">
+        <h1 class="cv-name">{{ firstName }} {{ lastName }}</h1>
+        <p class="cv-title">Cheffe de projet innovation</p>
+        <p class="cv-contact">{{ email }}</p>
+        <p class="cv-contact">{{ phone }}</p>
+        <p class="cv-contact">{{ city }}</p>
+    </header>
+
+    <section class="cv-section">
+        <h2 class="cv-section-title">PROFIL PROFESSIONNEL</h2>
+        <p>{{ profile }}</p>
+    </section>
+
+    @if (experiences?.length) {
+        <section class="cv-section">
+        <h2 class="cv-section-title">EXPÉRIENCES PROFESSIONNELLES</h2>
+        @for (exp of experiences; track exp.date) {
+            <div class="cv-job">
+            <p class="cv-job-date">{{ exp.date }}</p>
+            <p class="cv-job-title">{{ exp.title }}</p>
+            <p class="cv-job-location">{{ exp.location }}</p>
+            <ul>
+                @for (mission of exp.missions; track mission) {
+                <li>{{ mission }}</li>
+                }
+            </ul>
+            </div>
+        }
+        </section>
+    }
+
+    @if (education?.length) {
+        <section class="cv-section">
+        <h2 class="cv-section-title">FORMATION</h2>
+        @for (edu of education; track edu.date) {
+            <div class="cv-edu">
+            <p class="cv-edu-date">{{ edu.date }}</p>
+            <p class="cv-edu-title">{{ edu.title }}</p>
+            <p class="cv-edu-school">{{ edu.school }}</p>
+            <p class="cv-edu-location">{{ edu.location }}</p>
+            </div>
+        }
+        </section>
+    }
+
+    @if (skills?.length) {
+        <section class="cv-section">
+        <h2 class="cv-section-title">COMPÉTENCES</h2>
+        <ul class="cv-skills">
+            @for (skill of skills; track skill) {
+            <li>{{ skill }}</li>
+            }
+        </ul>
+        </section>
+    }
+
+    @if (languages?.length) {
+        <section class="cv-section">
+        <h2 class="cv-section-title">LANGUES</h2>
+        @for (lang of languages; track lang) {
+            <p>{{ lang }}</p>
+        }
+        </section>
+    }
+
+    @if (interests) {
+        <section class="cv-section">
+        <h2 class="cv-section-title">CENTRES D’INTÉRÊT</h2>
+        <p>{{ interests }}</p>
+        </section>
+    }
+
+    @if (linkedin) {
+        <section class="cv-section">
+        <h2 class="cv-section-title">RÉSEAUX SOCIAUX</h2>
+        <p>LinkedIn : {{ linkedin }}</p>
+        </section>
+    }
+
+    @if (certifications) {
+        <section class="cv-section">
+        <h2 class="cv-section-title">COURS ET CERTIFICATIONS</h2>
+        <p>{{ certifications }}</p>
+        </section>
+    }
+</div>

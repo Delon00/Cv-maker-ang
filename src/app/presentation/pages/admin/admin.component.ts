@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '@services/user.service';
 import  User  from '@interfaces/user.interface';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss'],
   standalone: true,
-  imports:[CommonModule],
+  imports:[CommonModule, RouterLink],
 })
 export class AdminComponent implements OnInit {
   users: User[] = [];

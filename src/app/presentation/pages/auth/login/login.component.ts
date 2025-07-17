@@ -1,5 +1,5 @@
 // login.component.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from '@services/user.service';
 import { LocalStorageService } from '@services/local-storage.service';
@@ -20,7 +20,10 @@ export class LoginComponent implements OnInit {
   passwordError: string = '';
   isLoading: boolean = false;
 
-  constructor(private router: Router,private userService: UserService,private localStorage: LocalStorageService) {}
+
+  private router = inject(Router);
+  private userService = inject(UserService);
+  private localStorage = inject(LocalStorageService);
 
   ngOnInit(): void {
     this.formLogin = new FormGroup({

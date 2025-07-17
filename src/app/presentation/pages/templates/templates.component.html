@@ -11,9 +11,7 @@
                         <div class="cv-name">
                             <p class="font-semibold text-lg">{{ template.name }}</p>
                         </div>
-                        @if (template.previewUrl) {
-                            <img [src]="template.previewUrl" alt="Preview du template" class="mt-2 w-full h-auto rounded" />
-                        }
+                        @if (template.previewUrl) {<img [src]="template.previewUrl" alt="Preview du template" class=" w-full h-auto rounded" />}
                     </a>
                 }
             </div>

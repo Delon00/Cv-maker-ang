@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
+
 @Component({
   selector: 'app-simple',
   imports: [],
@@ -6,5 +7,32 @@ import { Component } from '@angular/core';
   styleUrl: './simple.component.scss'
 })
 export class SimpleComponent {
+    @Input() lastName!: string;
+    @Input() firstName!: string;
+    @Input() email!: string;
+    @Input() phone!: string;
+    @Input() city!: string;
 
+    @Input() profile!: string;
+
+    @Input() experiences!: {
+      date: string;
+      title: string;
+      location: string;
+      missions: string[];
+    }[];
+
+    @Input() education!: {
+      date: string;
+      title: string;
+      school: string;
+      location: string;
+    }[];
+
+    @Input() skills!: string[];
+
+    @Input() languages!: string[];
+    @Input() interests!: string;
+    @Input() linkedin!: string;
+    @Input() certifications!: string;
 }
