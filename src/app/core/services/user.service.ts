@@ -4,7 +4,7 @@ import { LocalStorageService } from '@services/local-storage.service';
 import User from '@interfaces/user.interface';
 import Register from '@interfaces/register.interface';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import decodeJwt from '@utils/decodeJwt';
@@ -26,6 +26,11 @@ export class UserService {
   private router = inject (Router) 
 
 
+  private currentUserSubject = new BehaviorSubject<User | null>(null);
+  currentUser$ = this.currentUserSubject.asObservable();
+
+
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage = '';
     if (error.error instanceof HttpErrorResponse) {
@@ -37,6 +42,11 @@ export class UserService {
     }
     console.log(errorMessage);
     return throwError(() => ({ status: error.status, message: errorMessage }));
+    
+  }
+
+  loadUser(): void {
+    this.getUser().subscribe();
   }
 
   getUserId(): string | null {
@@ -69,7 +79,8 @@ export class UserService {
     const userId = this.getUserId();
     return this.http.get<any>(`${this.userUrl}/${userId}`, {
       headers: new HttpHeaders({ 'Authorization': `Bearer ${this.localService.getToken()}` })
-    }).pipe(catchError(this.handleError));
+    }).pipe(tap(user => this.currentUserSubject.next(user)),catchError(this.handleError));
+    
   }
   
   getAllUsers() {
@@ -103,6 +114,7 @@ export class UserService {
 
   logout(): void {
     this.localService.destroyToken();
+    this.currentUserSubject.next(null);
     this.router.navigate(['/']);
   }
 

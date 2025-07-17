@@ -25,6 +25,7 @@ export class LoginComponent implements OnInit {
   private userService = inject(UserService);
   private localStorage = inject(LocalStorageService);
 
+
   ngOnInit(): void {
     this.formLogin = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
@@ -39,6 +40,7 @@ export class LoginComponent implements OnInit {
         next: (response: any) => {
           this.userService.saveUserData(response.user);
           this.localStorage.createToken(response.accessToken);
+
           // console.log('RESPONSE:', response);
           // console.log('TOKEN:', response.accessToken);
           // console.log('DECODED:', decodeJwt(response.accessToken));
@@ -49,7 +51,7 @@ export class LoginComponent implements OnInit {
           } else {
             this.router.navigate(['/dashboard']);
           }
-
+          this.userService.loadUser();
           this.isLoading = false;
         },
         error: (error: any) => {
