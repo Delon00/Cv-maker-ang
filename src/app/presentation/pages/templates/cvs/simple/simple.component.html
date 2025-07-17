@@ -15,14 +15,18 @@
     @if (experiences?.length) {
         <section class="cv-section">
         <h2 class="cv-section-title">EXPÉRIENCES PROFESSIONNELLES</h2>
-        @for (exp of experiences; track exp.date) {
+        @for (exp of experiences; track exp.endDate) {
             <div class="cv-job">
-            <p class="cv-job-date">{{ exp.date }}</p>
-            <p class="cv-job-title">{{ exp.title }}</p>
-            <p class="cv-job-location">{{ exp.location }}</p>
-                <ul>
-                    @for (mission of exp.missions; track mission) {<li>{{ mission }}</li>}
-                </ul>
+                <div>
+                    <div class="flex items-center"><p class="cv-job-date">{{ exp.startDate }}</p>-<p class="cv-job-date">{{ exp.endDate }}</p></div>
+                    <p class="cv-job-location">{{ exp.location }}</p>
+                </div>
+                <div class="w-4/6">
+                    <p class="cv-job-title">{{ exp.title }}</p>
+                    <ul>
+                        @for (mission of exp.missions; track mission) {<li>{{ mission }}</li>}
+                    </ul>
+                </div>
             </div>
         }
         </section>

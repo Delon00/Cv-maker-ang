@@ -6,11 +6,23 @@ main{
     .form-container{
         background-color: #fff;
         border-radius: 15px;
-        padding: 2rem;
+        padding: 1.8rem;
 
         .trash:hover{
             transform: scale(1.1);
             transition: ease 10ms cubic-bezier(0.075, 0.82, 0.165, 1);
+        }
+
+        .btn-add-on-cv{
+            color: #000;
+            padding: 0.25rem 0;
+            border: 2px solid #81ba4c;
+            width: 70%;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(6.9px);
+            -webkit-backdrop-filter: blur(6.9px);
         }
     }
 }

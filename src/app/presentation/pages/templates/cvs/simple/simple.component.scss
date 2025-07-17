@@ -47,6 +47,11 @@
 .cv-job, .cv-edu {
   margin-bottom: 12px;
 }
+.cv-job{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 
 .cv-job-title, .cv-edu-title {
   font-weight: bold;

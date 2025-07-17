@@ -108,6 +108,7 @@ export class CvEditorComponent implements OnInit {
   addExperience() {
     const experienceGroup = new FormGroup({
       title: new FormControl(''),
+      company: new FormControl(''),
       location: new FormControl(''),
       startDate: new FormControl(''),
       endDate: new FormControl(''),

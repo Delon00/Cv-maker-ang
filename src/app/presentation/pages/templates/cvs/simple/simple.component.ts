@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-simple',
@@ -19,6 +19,9 @@ export class SimpleComponent {
     @Input() experiences!: {
       date: string;
       title: string;
+      company: string;
+      startDate: string;
+      endDate: string;
       location: string;
       missions: string[];
     }[];

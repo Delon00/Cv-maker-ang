@@ -82,7 +82,7 @@
 
             <!-- Expériences Professionnelles -->
             <div class="mb-4 ">
-                <h3 class="block mb-1 text-black font-semibold">Expériences Professionnelles</h3>
+                <h3 class="text-lg block mb-1 text-black font-semibold">Expériences Professionnelles</h3>
                 <div formArrayName="experiences">
                     @for (exp of experiences.controls; track i; let i = $index) {
                         <div [formGroupName]="i" class="relative mb-4 border pt-8 p-4 border-input-color">
@@ -91,16 +91,20 @@
                                 <input type="text" id="exp-title" formControlName="title" class="border p-2 w-full rounded">
                             </div>
                             <div class="mb-2">
-                                <label  for="exp-location">Lieu</label>
+                                <label  for="exp-company">Entreprise</label>
+                                <input type="text" id="exp-company" formControlName="company" class="border p-2 w-full rounded">
+                            </div>
+                            <div class="mb-2">
+                                <label  for="exp-location">Ville et Pays</label>
                                 <input type="text" id="exp-location" formControlName="location" class="border p-2 w-full rounded">
                             </div>
                             <div class="mb-2">
                                 <label  for="exp-startDate">Date de début</label>
-                                <input type="date" id="exp-startDate" formControlName="startDate" class="border p-2 w-full rounded">
+                                <input type="month" id="exp-startDate" formControlName="startDate" class="border p-2 w-full rounded">
                             </div>
                             <div class="mb-2">
                                 <label  for="exp-endDate">Date de fin</label>
-                                <input type="date" id="exp-endDate" formControlName="endDate" class="border p-2 w-full rounded">
+                                <input type="month" id="exp-endDate" formControlName="endDate" class="border p-2 w-full rounded">
                             </div>
                             <div class="mb-2">
                                 <label  for="exp-missions">Missions</label>
@@ -111,12 +115,12 @@
 
                     }
                 </div>
-                <button type="button" (click)="addExperience()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Ajouter une expérience</button>
+                <div class="flex justify-center w-full my-4"><button type="button" (click)="addExperience()" class="btn-add-on-cv">Ajouter une expérience</button></div>
             </div>
 
             <!-- Formation -->
             <div class="mb-4 ">
-                <h3 class="block mb-1 text-black font-semibold">Formation</h3>
+                <h3 class="text-lg block mb-1 text-black font-semibold">Formation</h3>
                 <div formArrayName="experiences">
                     @for (exp of educations.controls; track i; let i = $index) {
                         <div [formGroupName]="i" class="relative mb-4 border p-4 border-input-color">
@@ -144,12 +148,12 @@
                         </div>
                     }
                 </div>
-                <button type="button" (click)="addEducation()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Ajouter une formation</button>
+                <div class="flex justify-center w-full my-4"><button type="button" (click)="addEducation()" class="btn-add-on-cv">Ajouter une formation</button></div>
             </div>
 
             <!-- Langues -->
             <div class="mb-4">
-                <h3 class="text-black font-semibold mb-2">Langues</h3>
+                <h3 class="text-lg text-black font-semibold mb-2">Langues</h3>
                 <div formArrayName="languages">
                     @for (lang of languages.controls; track i; let i = $index) {
                     <div [formGroupName]="i" class="relative mb-2 border p-4 border-input-color">
@@ -162,12 +166,12 @@
                     </div>
                     }
                 </div>
-                <button type="button" (click)="addLanguage()" class="bg-blue-500 text-white px-4 py-2 rounded mt-2">Ajouter une langue</button>
+                <div class="flex justify-center w-full my-4"><button type="button" (click)="addLanguage()" class="btn-add-on-cv">Ajouter une langue</button></div>
             </div>
 
 
             <div class="mb-4">
-                <h3 class="text-black font-semibold mb-2">Certifications</h3>
+                <h3 class="text-lg text-black font-semibold mb-2">Certifications</h3>
                 <div formArrayName="certifications">
                     @for (cert of certifications.controls; track i; let i = $index) {
                     <div [formGroupName]="i" class="relative mb-2 border p-4 border-input-color">
@@ -183,7 +187,8 @@
                     </div>
                     }
                 </div>
-                <button type="button" (click)="addCertification()" class="bg-blue-500 text-white px-4 py-2 rounded mt-2">Ajouter une certification</button>
+                <div class="flex justify-center w-full my-4"><button type="button" (click)="addCertification()" class="btn-add-on-cv">Ajouter une certification</button></div>
+                
             </div>
 
 
