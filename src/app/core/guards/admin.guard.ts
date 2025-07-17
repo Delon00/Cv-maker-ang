@@ -1,27 +1,28 @@
-// guards/admin.guard.ts
-import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { UserService } from '../services/user.service';
+
+import { inject, Injectable } from '@angular/core';
+import {CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router} from '@angular/router';
+import { UserService } from '@services/user.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminGuard implements CanActivate {
 
-  constructor(private userService: UserService, private router: Router) {}
+  private userService = inject(UserService);
+  private router = inject (Router);
+
 
   canActivate(
     next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    state: RouterStateSnapshot
+  ): boolean | UrlTree {
+    const isAdmin = this.userService.getUserPlan() === 'admin';
+    const isLoggedIn = this.userService.isAuthenticated();
 
-    if (this.userService.getUserPlan() === 'admin') {
+    if (isAdmin && isLoggedIn) {
       return true;
-
     } else {
-
-      this.router.navigate(['/']);
-      return false;
+      return this.router.parseUrl('/');
     }
   }
 }

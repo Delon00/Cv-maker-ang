@@ -53,7 +53,6 @@ onRegister() {
         if (response && response.message === 'Utilisateur créé avec succès') {
           this.localStorage.createToken(response.token);
           this.userService.saveUserData(response.user);
-          this.userService.loadUser();
           this.router.navigate(['/dashboard']);
         } else {
           console.error('Réponse inattendue', response);

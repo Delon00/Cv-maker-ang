@@ -30,7 +30,6 @@ export class CvEditorComponent implements OnInit {
   private templateService = inject(TemplatesService);
 
   ngOnInit(): void {
-    
     this.templateId = this.route.snapshot.paramMap.get('templateId')!;
     this.templateService.getTemplateById(this.templateId).subscribe({
       next: (template) => {
@@ -62,20 +61,20 @@ export class CvEditorComponent implements OnInit {
 
 
     this.formCvSimple.valueChanges.subscribe(val => {
-    this.previewData = {
-      ...val,
-      experiences: val.experiences?.map((exp: any) => ({
-        ...exp,
-        missions: typeof exp.missions === 'string'
-          ? exp.missions.split('\n').filter((line: string) => line.trim() !== '')
-          : exp.missions ?? []
-      })) ?? []
-    };
-  });
+      this.previewData = {
+        ...val,
+        experiences: val.experiences?.map((exp: any) => ({
+          ...exp,
+          missions: typeof exp.missions === 'string'
+            ? exp.missions.split('\n').filter((line: string) => line.trim() !== '')
+            : exp.missions ?? []
+        })) ?? []
+      };
+    });
 
 
 
-    this.userService.currentUser$.subscribe({
+    this.userService.getUser().subscribe({
       next: (user) => {
         if (user) {
           this.formCvSimple.patchValue({
@@ -89,7 +88,7 @@ export class CvEditorComponent implements OnInit {
         console.error('Erreur lors de la récupération des informations utilisateur:', err);
       }
     });
-
+    
   }
 
   get experiences(): FormArray {

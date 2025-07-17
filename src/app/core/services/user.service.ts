@@ -26,9 +26,8 @@ export class UserService {
   private router = inject (Router) 
 
 
-  private currentUserSubject = new BehaviorSubject<User | null>(null);
-  currentUser$ = this.currentUserSubject.asObservable();
-
+  private currentUserSubject = new BehaviorSubject<any>(null);
+  public currentUser$ = this.currentUserSubject.asObservable();
 
 
   private handleError(error: HttpErrorResponse) {
@@ -45,9 +44,6 @@ export class UserService {
     
   }
 
-  loadUser(): void {
-    this.getUser().subscribe();
-  }
 
   getUserId(): string | null {
     const token = this.localService.getToken();
