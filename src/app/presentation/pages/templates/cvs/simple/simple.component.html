@@ -14,21 +14,22 @@
 
     @if (experiences?.length) {
         <section class="cv-section">
-        <h2 class="cv-section-title">EXPÉRIENCES PROFESSIONNELLES</h2>
-        @for (exp of experiences; track exp.endDate) {
-            <div class="cv-job">
-                <div>
-                    <div class="flex items-center"><p class="cv-job-date">{{ exp.startDate }}</p>-<p class="cv-job-date">{{ exp.endDate }}</p></div>
-                    <p class="cv-job-location">{{ exp.location }}</p>
+            <h2 class="cv-section-title">EXPÉRIENCES PROFESSIONNELLES</h2>
+            @for (exp of experiences; track exp.endYear) {
+                <div class="cv-job">
+                    <div>
+                        <div class="flex items-center gap-2"><p class="cv-job-date">{{ exp.startMonth }}/{{ exp.startYear }}</p>-<p class="cv-job-date">{{exp.endMonth}}/{{ exp.endYear }}</p></div>
+                        <p class="cv-job-company">{{ exp.company }}</p>
+                        <p class="cv-job-location">{{ exp.location }}</p>
+                    </div>
+                    <div class="w-4/6">
+                        <p class="cv-job-title">{{ exp.title }}</p>
+                        <ul>
+                            @for (mission of exp.missions; track mission) {<li>{{ mission }}</li>}
+                        </ul>
+                    </div>
                 </div>
-                <div class="w-4/6">
-                    <p class="cv-job-title">{{ exp.title }}</p>
-                    <ul>
-                        @for (mission of exp.missions; track mission) {<li>{{ mission }}</li>}
-                    </ul>
-                </div>
-            </div>
-        }
+            }
         </section>
     }
 
@@ -66,10 +67,12 @@
         </section>
     }
 
-    @if (interests) {
+    @if (interests?.length) {
         <section class="cv-section">
             <h2 class="cv-section-title">CENTRES D’INTÉRÊT</h2>
-            <p>{{ interests }}</p>
+            @for (interest of interests; track interest) {
+                <p>{{ interest.name_interest }}</p>
+            }
         </section>
     }
 

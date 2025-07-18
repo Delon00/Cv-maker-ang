@@ -6,12 +6,12 @@ import { UserService } from '@services/user.service';
 import FormErrorChecker from '@app/utils/formErrorChecker';
 import { TemplatesService } from '@services/templates.service';
 import { NavbarComponent } from '@layout/navbar/navbar.component';
-
+import { SelectModule } from 'primeng/select';
 
 @Component({
   selector: 'app-cv-editor',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NavbarComponent],
+  imports: [CommonModule, ReactiveFormsModule, NavbarComponent,SelectModule ],
   templateUrl: './cv-editor.component.html',
   styleUrls: ['./cv-editor.component.scss']
 })
@@ -23,6 +23,23 @@ export class CvEditorComponent implements OnInit {
   templateName = '';
   errorChecker = FormErrorChecker();
   formErrors: { [key: string]: string } = {};
+  currentYear: number = new Date().getFullYear();
+
+month: { name: string; value: string }[] = [ 
+  { name: 'Janvier', value: '01' },
+  { name: 'Février', value: '02' },
+  { name: 'Mars', value: '03' },
+  { name: 'Avril', value: '04' },
+  { name: 'Mai', value: '05' },
+  { name: 'Juin', value: '06' },
+  { name: 'Juillet', value: '07' },
+  { name: 'Août', value: '08' },
+  { name: 'Septembre', value: '09' },
+  { name: 'Octobre', value: '10' },
+  { name: 'Novembre', value: '11' },
+  { name: 'Décembre', value: '12' }
+];
+
 
 
   private userService = inject(UserService);
@@ -51,14 +68,14 @@ export class CvEditorComponent implements OnInit {
       email: new FormControl(''),
       phone: new FormControl(''),
       title: new FormControl(''),
-      interests: new FormControl(''),
       linkedin: new FormControl(''),
       profile: new FormControl(''),
       city: new FormControl(''),
       experiences: new FormArray([]),
       educations: new FormArray([]),
       languages: new FormArray([]),
-      certifications: new FormArray([])
+      certifications: new FormArray([]),
+      interests: new FormArray([]),
     });
 
 
@@ -98,21 +115,36 @@ export class CvEditorComponent implements OnInit {
   get educations(): FormArray {return this.formCvSimple.get('educations') as FormArray;}
   get languages(): FormArray {return this.formCvSimple.get('languages') as FormArray;}
   get certifications(): FormArray {return this.formCvSimple.get('certifications') as FormArray;}
+  get interests(): FormArray {return this.formCvSimple.get('interests') as FormArray;}
+  
+  getMissions(expIndex: number): FormArray {
+    return this.experiences.at(expIndex).get('missions') as FormArray;
+  }
+
+  onSave() {
+    if (this.formCvSimple.valid) {
+      console.log('Formulaire valide ! Données :', this.formCvSimple.value);
+    } else {
+      this.formCvSimple.markAllAsTouched();
+      this.errorChecker.checkCvEditorFormErrors(this.formCvSimple, this.formErrors);
+    }
+  }
 
 
-  removeExperience(index: number) {this.experiences.removeAt(index);}
-  removeEducation(index: number) {this.educations.removeAt(index);}
-  removeLanguage(index: number) {this.languages.removeAt(index);}
-  removeCertification(index: number) {this.certifications.removeAt(index);}
 
-  addExperience() {
+
+
+    addExperience() {
     const experienceGroup = new FormGroup({
       title: new FormControl(''),
       company: new FormControl(''),
       location: new FormControl(''),
-      startDate: new FormControl(''),
-      endDate: new FormControl(''),
-      missions: new FormControl('')
+      startMonth: new FormControl(''),
+      startYear: new FormControl(''),
+      endMonth: new FormControl(''),
+      endYear: new FormControl(''),
+      missions: new FormArray([new FormControl('')])
+
     });
     this.experiences.push(experienceGroup);
   }
@@ -122,8 +154,8 @@ export class CvEditorComponent implements OnInit {
       school: new FormControl(''),
       location: new FormControl(''),
       field: new FormControl(''),
-      startDate: new FormControl(''),
-      endDate: new FormControl('')
+      startYear: new FormControl(''),
+      endYear: new FormControl('')
     });
     this.educations.push(educationGroup);
   }
@@ -145,12 +177,21 @@ export class CvEditorComponent implements OnInit {
     this.languages.push(languageGroup);
   }
 
-  onSave() {
-    if (this.formCvSimple.valid) {
-      console.log('Formulaire valide ! Données :', this.formCvSimple.value);
-    } else {
-      this.formCvSimple.markAllAsTouched();
-      this.errorChecker.checkCvEditorFormErrors(this.formCvSimple, this.formErrors);
-    }
+  addInterest() {
+    const interestGroup = new FormGroup({
+      name_interest: new FormControl(''),
+    });
+    this.interests.push(interestGroup);
   }
+
+  addMission(expIndex: number) {
+    this.getMissions(expIndex).push(new FormControl(''));
+  }
+
+  removeExperience(index: number) {this.experiences.removeAt(index);}
+  removeEducation(index: number) {this.educations.removeAt(index);}
+  removeLanguage(index: number) {this.languages.removeAt(index);}
+  removeCertification(index: number) {this.certifications.removeAt(index);}
+  removeInterest(index: number) {this.interests.removeAt(index);}
+  removeMission(expIndex: number, missionIndex: number) {this.getMissions(expIndex).removeAt(missionIndex);}
 }

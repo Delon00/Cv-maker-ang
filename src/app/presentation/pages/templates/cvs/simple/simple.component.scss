@@ -1,9 +1,12 @@
 .cv-container {
-    padding: 1.5rem;
+    width: 100%;
+    max-width: 794px;
+    aspect-ratio: 1 / 1.4142;
+    margin: auto;
+    background: white;
+    padding: 1rem;
     background-color: #fff;
-    max-width: 800px;
     margin: 0 auto;
-    font-family: Arial, sans-serif;
     color: #000;
     font-size: 14px;
     line-height: 1.5;
@@ -49,7 +52,6 @@
 }
 .cv-job{
   display: flex;
-  align-items: center;
   justify-content: space-between;
 }
 

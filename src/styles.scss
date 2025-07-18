@@ -81,12 +81,15 @@ button{border-radius: 15px;cursor: pointer;}
 
     label{color: #000;}
     .border-input-color{border: 1px solid #42424276;border-radius: 10px;}
-    input,textarea{
-        color: #0a0a0a;
-        padding: 0.3rem 0.5rem;
-        border-radius: 10px;
-        border: 1px solid #4242422a;
-        background-color: #ebebeb;
-        width: 100%;
-        box-shadow: rgba(27, 31, 35, 0.04) 0px 1px 0px, rgba(255, 255, 255, 0.25) 0px 1px 0px inset;
+    
+    .p-select-label {padding: 0 !important;}
+    
+    input,textarea,p-select{
+        color: #0a0a0a !important;
+        padding: 0.3rem 0.5rem !important;
+        border-radius: 10px !important;
+        border: 1px solid #4242422a !important;
+        background-color: #ebebeb !important;
+        width: 100% !important;
+        box-shadow: rgba(27, 31, 35, 0.04) 0px 1px 0px, rgba(255, 255, 255, 0.25) 0px 1px 0px inset !important;
     }
