@@ -9,7 +9,7 @@
 
     <section class="cv-section">
         <h2 class="cv-section-title">PROFIL PROFESSIONNEL</h2>
-        <p>{{ profile }}</p>
+        <p>{{ resume }}</p>
     </section>
 
     @if (experiences?.length) {
@@ -62,7 +62,8 @@
         <section class="cv-section">
         <h2 class="cv-section-title">LANGUES</h2>
         @for (lang of languages; track lang) {
-            <p>{{ lang }}</p>
+            <p>{{ lang.name }}</p>
+            <p>{{ lang.level }}</p>
         }
         </section>
     }
@@ -76,10 +77,10 @@
         </section>
     }
 
-    @if (linkedin) {
+    @if (linkedIn) {
         <section class="cv-section">
         <h2 class="cv-section-title">RÉSEAUX SOCIAUX</h2>
-        <p>LinkedIn : {{ linkedin }}</p>
+        <p>LinkedIn : {{ linkedIn }}</p>
         </section>
     }
 

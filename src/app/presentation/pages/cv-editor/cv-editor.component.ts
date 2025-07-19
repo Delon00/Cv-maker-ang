@@ -7,13 +7,19 @@ import FormErrorChecker from '@app/utils/formErrorChecker';
 import { TemplatesService } from '@services/templates.service';
 import { NavbarComponent } from '@layout/navbar/navbar.component';
 import { SelectModule } from 'primeng/select';
+import { CvService } from '@services/cv.service';
+import { MessageService } from 'primeng/api';
+import { Toast } from 'primeng/toast';
+import { ButtonModule } from 'primeng/button';
+import { Ripple } from 'primeng/ripple';
 
 @Component({
   selector: 'app-cv-editor',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NavbarComponent,SelectModule ],
+  imports: [CommonModule, ReactiveFormsModule, NavbarComponent,SelectModule, Toast, Ripple, ButtonModule],
   templateUrl: './cv-editor.component.html',
-  styleUrls: ['./cv-editor.component.scss']
+  styleUrls: ['./cv-editor.component.scss'],
+  providers: [MessageService]
 })
 export class CvEditorComponent implements OnInit {
   formCvSimple!: FormGroup;
@@ -24,6 +30,7 @@ export class CvEditorComponent implements OnInit {
   errorChecker = FormErrorChecker();
   formErrors: { [key: string]: string } = {};
   currentYear: number = new Date().getFullYear();
+  userId: string | null = null;
 
 month: { name: string; value: string }[] = [ 
   { name: 'Janvier', value: '01' },
@@ -45,6 +52,8 @@ month: { name: string; value: string }[] = [
   private userService = inject(UserService);
   private route = inject(ActivatedRoute);
   private templateService = inject(TemplatesService);
+  private cvService = inject(CvService);
+  private messageService = inject(MessageService);
 
   ngOnInit(): void {
     this.templateId = this.route.snapshot.paramMap.get('templateId')!;
@@ -62,15 +71,18 @@ month: { name: string; value: string }[] = [
         console.error('Erreur lors de la récupération du template:', err);
       }
     });
+
+    
     this.formCvSimple = new FormGroup({
       lastName: new FormControl(''),
       firstName: new FormControl(''),
       email: new FormControl(''),
       phone: new FormControl(''),
-      title: new FormControl(''),
-      linkedin: new FormControl(''),
-      profile: new FormControl(''),
+      resume: new FormControl(''),
       city: new FormControl(''),
+      title: new FormControl(''),
+      linkedIn: new FormControl(''),
+      website: new FormControl(''),
       experiences: new FormArray([]),
       educations: new FormArray([]),
       languages: new FormArray([]),
@@ -94,22 +106,28 @@ month: { name: string; value: string }[] = [
 
 
 
-    this.userService.getUser().subscribe({
-      next: (user) => {
-        if (user) {
+
+    const idUser = this.userService.getUserId();
+    if (idUser) {
+      this.userId = idUser;
+      this.userService.getUser().subscribe({
+        next: (user) => {
           this.formCvSimple.patchValue({
-            lastName: user.lastName || '',
-            firstName: user.firstName || '',
-            email: user.email || '',
+            lastName: user.lastName ?? '',
+            firstName: user.firstName ?? '',
+            email: user.email ?? '',
           });
+        },
+        error: (err) => {
+          console.error('Erreur récupération utilisateur :', err);
         }
-      },
-      error: (err) => {
-        console.error('Erreur lors de la récupération des informations utilisateur:', err);
-      }
-    });
+      });
+    } else {
+      this.userId = null;
+    }
     
   }
+
 
   get experiences(): FormArray {return this.formCvSimple.get('experiences') as FormArray;}
   get educations(): FormArray {return this.formCvSimple.get('educations') as FormArray;}
@@ -121,17 +139,36 @@ month: { name: string; value: string }[] = [
     return this.experiences.at(expIndex).get('missions') as FormArray;
   }
 
-  onSave() {
-    if (this.formCvSimple.valid) {
-      console.log('Formulaire valide ! Données :', this.formCvSimple.value);
-    } else {
-      this.formCvSimple.markAllAsTouched();
-      this.errorChecker.checkCvEditorFormErrors(this.formCvSimple, this.formErrors);
+    onSave() {
+      if (!this.userId) {
+        this.messageService.add({severity: 'warn',summary: 'Utilisateur non connecté',detail: 'Vous devez être connecté pour enregistrer votre CV.'});
+        return;
+      }
+
+      if (this.formCvSimple.valid) {
+        const formData = {
+          ...this.formCvSimple.value,
+          templateId: this.templateId,
+        };
+
+        this.cvService.createCv(formData).subscribe({
+          next: (savedCv) => {
+            this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'CV sauvegardé avec succès' });
+          },
+          error: (error) => {
+            console.error('Erreur sauvegarde CV :', error);
+            this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Une erreur est survenue' });
+          }
+        });
+      } else {
+        this.formCvSimple.markAllAsTouched();
+        this.errorChecker.checkCvEditorFormErrors(this.formCvSimple, this.formErrors);
+      }
     }
+
+  onDownload(){
+
   }
-
-
-
 
 
     addExperience() {

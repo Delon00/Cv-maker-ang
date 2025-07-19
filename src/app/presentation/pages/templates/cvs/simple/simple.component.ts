@@ -7,14 +7,16 @@ import { Component, Input } from '@angular/core';
   styleUrl: './simple.component.scss'
 })
 export class SimpleComponent {
+
     @Input() lastName?: string;
     @Input() firstName?: string;
     @Input() email?: string;
+    @Input() website?: string;
     @Input() phone?: string;
+    @Input() linkedIn?: string;
     @Input() title?: string;
     @Input() city?: string;
-
-    @Input() profile?: string;
+    @Input() resume?: string;
 
     @Input() experiences?: {
       date:         string;
@@ -49,6 +51,6 @@ export class SimpleComponent {
 
 
 
-    @Input() linkedin?: string;
+
     @Input() certifications?: string;
 }
