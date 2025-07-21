@@ -2,6 +2,7 @@ body{
     padding: 0;
     margin: 0;
     overflow-x: hidden;
+    max-width: 100dvw;
     background: #000000fa;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(15px);
@@ -23,45 +24,39 @@ body{
         .circle {
             position: absolute;
             top: 400px;
-            left: -200px;
-            width: 40rem;    
+            left: -250px;
+            width: 50rem;    
             height: 40rem;
             border-radius: 9999px;
             mix-blend-mode: multiply;
             filter: blur(2rem);  // blur-xl ~ 24px = 2rem
-            opacity: 0.02;
-            animation: pulse 4s infinite;
+            // animation: pulse 4s infinite;
             background-color: #f97316;
-            opacity: 0.04;
+            opacity: 0.07;
             }
         .circle2 {
             position: absolute;
             top: -300px;
             right: -100px;
-            width: 40rem;    
-            height: 40rem;
-            border-radius: 9999px; // rounded-full
+            width: 45rem;    
+            height: 45rem;
+            border-radius: 9999px;
             mix-blend-mode: multiply;
             filter: blur(2rem);  // blur-xl ~ 24px = 2rem
-            opacity: 0.02;
-            animation: pulse 4s infinite;
-            background-color: #f97316;
-            opacity: 0.04;
-        }
-        }
-
-
-        @keyframes pulse {
-        0%, 100% {
-            opacity: 0.06;
-        }
-        50% {
-            opacity: 0.08;
+            opacity: 0.065;
+            // animation: pulse 4s infinite;
+            background-color: #fba05f;
         }
     }
 
 
+        @keyframes pulse {
+            0%, 100% {opacity: 0.06;}
+            50% {opacity: 0.09;}
+        }
+
     main{
+
         .hero{
             display: flex;
             height: 100dvh;
@@ -81,3 +76,7 @@ body{
         }
     }
 }
+
+
+
+

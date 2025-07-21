@@ -87,25 +87,24 @@
                     @for (exp of experiences.controls; track i; let i = $index) {
                     <div [formGroupName]="i" class="relative mb-4 border pt-8 p-4 border-input-color">
                         
-                        <!-- Poste -->
                         <div class="mb-2">
-                            <label for="exp-title">Poste</label>
-                            <input type="text" id="exp-title" formControlName="title" class="border p-2 w-full rounded" />
+                            <label for="jobTitle">Poste</label>
+                            <input type="text" id="jobTitle" formControlName="jobTitle" class="border p-2 w-full rounded" />
                         </div>
 
-                        <!-- Entreprise -->
+
                         <div class="mb-2">
                             <label for="exp-company">Entreprise</label>
                             <input type="text" id="exp-company" formControlName="company" class="border p-2 w-full rounded" />
                         </div>
 
-                        <!-- Ville -->
+
                         <div class="mb-2">
                             <label for="exp-location">Ville et Pays</label>
                             <input type="text" id="exp-location" formControlName="location" class="border p-2 w-full rounded" />
                         </div>
 
-                        <!-- Dates -->
+
                         <div class="flex gap-4 my-4">
                             <div class="flex items-center gap-2 px-1">
                                 <div class="w-full mb-2">
@@ -161,8 +160,8 @@
                 <!-- Formation -->
                 <div class="my-8 ">
                     <div class="flex gap-5 items-center"><h3 class="text-lg whitespace-nowrap block mb-1 text-black font-semibold">Formation</h3><hr class="hr"></div>
-                    <div formArrayName="experiences">
-                        @for (exp of educations.controls; track i; let i = $index) {
+                    <div formArrayName="educations">
+                        @for (edu of educations.controls; track i; let i = $index) {
                             <div [formGroupName]="i" class="relative mb-4 border p-4 border-input-color">
                                 <div class="mb-2">
                                     <label  for="edu-school">Établissement</label>
@@ -176,14 +175,14 @@
                                     <label  for="edu-field">Titre de formation</label>
                                     <input id="edu-field" formControlName="field" class="border p-2 w-full rounded">
                                 </div>
-                                    <div class="flex justify-between">
-                                        <div class="mb-2">
+                                    <div class="flex justify-between gap-2">
+                                        <div class="mb-2 w-full">
                                             <label  for="edu-startDate">Année de début</label>
-                                            <input type="text" id="edu-startDate" formControlName="startDate" class="border p-2 w-full rounded">
+                                            <input type="text" id="edu-startDate" formControlName="startYear" class="border p-2 w-full rounded">
                                         </div>
-                                        <div class="mb-2">
+                                        <div class="mb-2 w-full">
                                             <label  for="edu-startDate">Année de fin</label>
-                                            <input type="text" id="edu-startDate" formControlName="startDate" class="border p-2 w-full rounded">
+                                            <input type="text" id="edu-startDate" formControlName="endYear" class="border p-2 w-full rounded">
                                         </div>
                                     </div>
 
@@ -192,6 +191,25 @@
                         }
                     </div>
                     <div class="flex w-full my-4"><button type="button" (click)="addEducation()" class="btn-add-on-cv">Ajouter une formation</button></div>
+                </div>
+
+
+                <!-- Competences -->
+                <div class="my-8 ">
+                    <div class="flex gap-5 items-center"><h3 class="text-lg whitespace-nowrap block mb-1 text-black font-semibold">Compétences</h3><hr class="hr"></div>
+                    <div formArrayName="skills">
+                        @for (skill of skills.controls; track i; let i = $index) {
+                            <div [formGroupName]="i" class="relative mb-4 border p-4 border-input-color">
+                                <div class="mb-2">
+                                    <label  for="skill">Compétences</label>
+                                    <input type="text" id="skill" formControlName="name" class="border p-2 w-full rounded">
+                                </div>
+
+                                <button type="button" (click)="removeSkill(i)" class="trash absolute top-2 right-2 mb-2 text-red-500 hover:underline"><i class="pi pi-trash" style="color: red"></i></button>
+                            </div>
+                        }
+                    </div>
+                    <div class="flex w-full my-4"><button type="button" (click)="addSkill()" class="btn-add-on-cv">Ajouter une Compétence</button></div>
                 </div>
 
                 <!-- Langues -->
@@ -222,8 +240,8 @@
                             <label for="title">Titre</label>
                             <input id="title" formControlName="title" type="text" class="border p-2 w-full rounded mb-2">
 
-                            <label for="institution">Institution</label>
-                            <input id="institution" formControlName="institution" type="text" class="border p-2 w-full rounded mb-2">
+                            <!-- <label for="institution">Institution</label>
+                            <input id="institution" formControlName="institution" type="text" class="border p-2 w-full rounded mb-2"> -->
 
                             <label for="date">Date d'obtention</label>
                             <input id="date" formControlName="date" type="date" class="border p-2 w-full rounded">

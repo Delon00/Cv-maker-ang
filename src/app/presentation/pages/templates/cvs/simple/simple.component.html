@@ -1,7 +1,7 @@
 <div class="cv-container">
     <header class="cv-header">
         <h1 class="cv-name">{{ firstName }} {{ lastName }}</h1>
-        <p class="cv-title">{{ title }}</p>
+        <p class="cv-title">{{ profile }}</p>
         <p class="cv-contact">{{ email }}</p>
         <p class="cv-contact">{{ phone }}</p>
         <p class="cv-contact">{{ city }}</p>
@@ -23,7 +23,7 @@
                         <p class="cv-job-location">{{ exp.location }}</p>
                     </div>
                     <div class="w-4/6">
-                        <p class="cv-job-title">{{ exp.title }}</p>
+                        <p class="cv-job-title">{{ exp.jobTitle }}</p>
                         <ul>
                             @for (mission of exp.missions; track mission) {<li>{{ mission }}</li>}
                         </ul>
@@ -33,15 +33,15 @@
         </section>
     }
 
-    @if (education?.length) {
+    @if (educations?.length) {
         <section class="cv-section">
-        <h2 class="cv-section-title">FORMATION</h2>
-        @for (edu of education; track edu.date) {
+        <h2 class="cv-section-title">DIPLÔME ET FORMATION</h2>
+        @for (edu of educations; track edu.endYear) {
             <div class="cv-edu">
-            <p class="cv-edu-date">{{ edu.date }}</p>
-            <p class="cv-edu-title">{{ edu.title }}</p>
-            <p class="cv-edu-school">{{ edu.school }}</p>
-            <p class="cv-edu-location">{{ edu.location }}</p>
+                <p class="cv-edu-date">{{ edu.endYear }}</p>
+                <p class="cv-edu-title">{{ edu.field }}</p>
+                <p class="cv-edu-school">{{ edu.school }}</p>
+                <p class="cv-edu-location">{{ edu.location }}</p>
             </div>
         }
         </section>
@@ -49,12 +49,12 @@
 
     @if (skills?.length) {
         <section class="cv-section">
-        <h2 class="cv-section-title">COMPÉTENCES</h2>
-        <ul class="cv-skills">
-            @for (skill of skills; track skill) {
-            <li>{{ skill }}</li>
-            }
-        </ul>
+            <h2 class="cv-section-title">COMPÉTENCES</h2>
+            <ul class="cv-skills">
+                @for (skill of skills; track skill) {
+                <li>{{ skill.name }}</li>
+                }
+            </ul>
         </section>
     }
 
@@ -79,17 +79,21 @@
         </section>
     }
 
-    @if (linkedIn) {
+    @if (linkedIn || website) {
         <section class="cv-section">
-        <h2 class="cv-section-title">RÉSEAUX SOCIAUX</h2>
+        <h2 class="cv-section-title">RÉSEAUX </h2>
         <p>LinkedIn : {{ linkedIn }}</p>
+        <p>Website : {{ website }}</p>
         </section>
     }
 
-    @if (certifications) {
+    @if (certifications?.length) {
         <section class="cv-section">
-        <h2 class="cv-section-title">COURS ET CERTIFICATIONS</h2>
-        <p>{{ certifications }}</p>
+        <h2 class="cv-section-title">CERTIFICATIONS</h2>
+        @for (cert of certifications; track cert) {
+            <p>{{ cert.title }}</p>
+            <p>{{ cert.date }}</p>
+        }
         </section>
     }
 </div>

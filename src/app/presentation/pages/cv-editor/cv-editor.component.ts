@@ -74,6 +74,7 @@ export class CvEditorComponent implements OnInit {
       linkedIn: new FormControl(''),
       website: new FormControl(''),
       experiences: new FormArray([]),
+      skills: new FormArray([]),
       educations: new FormArray([]),
       languages: new FormArray([]),
       certifications: new FormArray([]),
@@ -110,6 +111,7 @@ export class CvEditorComponent implements OnInit {
 
   get experiences(): FormArray {return this.formCvSimple.get('experiences') as FormArray;}
   get educations(): FormArray {return this.formCvSimple.get('educations') as FormArray;}
+  get skills(): FormArray {return this.formCvSimple.get('skills') as FormArray;}
   get languages(): FormArray {return this.formCvSimple.get('languages') as FormArray;}
   get certifications(): FormArray {return this.formCvSimple.get('certifications') as FormArray;}
   get interests(): FormArray {return this.formCvSimple.get('interests') as FormArray;}
@@ -151,9 +153,9 @@ export class CvEditorComponent implements OnInit {
   onDownload(){}
 
 
-    addExperience() {
+  addExperience() {
     const experienceGroup = new FormGroup({
-      title: new FormControl(''),
+      jobTitle: new FormControl(''),
       company: new FormControl(''),
       location: new FormControl(''),
       startMonth: new FormControl(''),
@@ -175,6 +177,13 @@ export class CvEditorComponent implements OnInit {
       endYear: new FormControl('')
     });
     this.educations.push(educationGroup);
+  }
+
+  addSkill() {
+    const skillGroup = new FormGroup({
+      name: new FormControl(''),
+    });
+    this.skills.push(skillGroup);
   }
 
   addCertification() {
@@ -207,6 +216,7 @@ export class CvEditorComponent implements OnInit {
 
   removeExperience(index: number) {this.experiences.removeAt(index);}
   removeEducation(index: number) {this.educations.removeAt(index);}
+  removeSkill(index: number) {this.skills.removeAt(index);}
   removeLanguage(index: number) {this.languages.removeAt(index);}
   removeCertification(index: number) {this.certifications.removeAt(index);}
   removeInterest(index: number) {this.interests.removeAt(index);}
