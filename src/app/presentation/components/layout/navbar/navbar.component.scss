@@ -1,5 +1,4 @@
 nav{
-
     position: fixed;
     display: flex;
     align-items: center;
@@ -10,8 +9,9 @@ nav{
     section{
         margin-top: 1rem;
         padding: 0.1rem 1.5rem;
-        background: rgba(255, 255, 255, 0.019);
+        background: rgba(255, 255, 255, 0.744);
         border-radius: 16px;
+        border: 1px solid #faa86e67;
         box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         backdrop-filter: blur(14.7px);
         -webkit-backdrop-filter: blur(14.7px);
@@ -21,7 +21,7 @@ nav{
         width: 80%;
 
         a{
-            color: white;
+            color: #000;
             text-decoration: none;
             font-weight: 500;
             font-size: 1.2rem;

@@ -5,8 +5,21 @@
         <section class="form-container">
 
             <form [formGroup]="formCvSimple" (ngSubmit)="onSave()">
-                <div class="flex justify-between w-full gap-2">
 
+                <p-dialog header="Enregistrer le cv" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
+                    <span class="p-text-secondary block mb-8">Update your information.</span>
+                    <div class="mb-4">
+                        <label for="cvName" class="font-semibold w-24">Nom du Cv</label>
+                        <input pInputText id="cvName" formControlName="cvName"  class="flex-auto" autocomplete="off" />
+                    </div>
+
+                    <div class="flex justify-end gap-2">
+                        <p-button label="Cancel" severity="secondary" (click)="visible = false" />
+                        <p-button label="Save" type="submit" />
+                    </div>
+                </p-dialog>
+
+                <div class="flex justify-between w-full gap-2">
                     <!-- Nom -->
                     <div class="mb-4 w-full">
                         <label  for="lastName" class="block mb-1 font-semibold">Nom</label>
@@ -37,8 +50,8 @@
                 <div class="flex justify-between w-full gap-2">
                     <!-- Titre -->
                     <div class="mb-4 w-full">
-                        <label  for="title" class="block mb-1 font-semibold">Titre professionnel</label>
-                        <input type="text" id="title" formControlName="title" class="border p-2 w-full rounded">
+                        <label  for="profile" class="block mb-1 font-semibold">Titre professionnel</label>
+                        <input type="text" id="profile" formControlName="profile" class="border p-2 w-full rounded">
                     </div>
 
                     <!-- Ville -->
@@ -188,10 +201,10 @@
                         @for (lang of languages.controls; track i; let i = $index) {
                         <div [formGroupName]="i" class="relative mb-2 border p-4 border-input-color">
                             <label for="name">Langue</label>
-                            <input id="name" formControlName="name" type="text" class="border p-2 w-full rounded mb-2">
+                            <p-select [options]="langues" optionLabel="name" optionValue="value" formControlName="name" [checkmark]="true" [showClear]="true" placeholder="Sélectionnez" class="w-full md:w-56" />
 
                             <label for="level">Niveau</label>
-                            <input id="level" formControlName="level" type="text" class="border p-2 w-full rounded">
+                            <p-select [options]="langLevel" optionLabel="level" optionValue="value" formControlName="level" [checkmark]="true" [showClear]="true" placeholder="Sélectionnez" class="w-full md:w-56" />
                             <button type="button" (click)="removeLanguage(i)" class="trash absolute top-2 right-2 mb-2 text-red-500 hover:underline"><i class="pi pi-trash" style="color: red"></i></button>
                         </div>
                         }
@@ -238,8 +251,8 @@
                 </div>
 
                 <div class="flex gap-2">
-                    @if(userId){<p-button type="submit" pRipple type="submit" >Sauvegarder le CV</p-button>}
-                    <p-button type="button" (Click)="onDownload()"  type="submit" >Télécharger le CV</p-button>
+                    @if(userId){<p-button (click)="onConfirm()" >Sauvegarder le CV</p-button>}
+                    <p-button type="button" (Click)="onDownload()"  >Télécharger le CV</p-button>
                 </div>
 
             </form>

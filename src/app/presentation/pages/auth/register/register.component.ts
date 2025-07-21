@@ -50,7 +50,7 @@ onRegister() {
 
     this.userService.register(this.userRegister).subscribe({
       next: (response: any) => {
-        if (response && response.message === 'Utilisateur créé avec succès') {
+        if (response && response.message === 'User registered successfully') {
           this.localStorage.createToken(response.token);
           this.userService.saveUserData(response.user);
           this.router.navigate(['/dashboard']);

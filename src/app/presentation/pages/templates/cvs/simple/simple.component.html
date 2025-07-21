@@ -62,8 +62,10 @@
         <section class="cv-section">
         <h2 class="cv-section-title">LANGUES</h2>
         @for (lang of languages; track lang) {
-            <p>{{ lang.name }}</p>
-            <p>{{ lang.level }}</p>
+            <div class="flex item-center gap-2">
+                <p>{{ lang.name }} :</p>
+                <p>{{ lang.level }}</p>
+            </div>
         }
         </section>
     }

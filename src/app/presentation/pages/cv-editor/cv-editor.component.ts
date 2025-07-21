@@ -8,20 +8,22 @@ import { TemplatesService } from '@services/templates.service';
 import { NavbarComponent } from '@layout/navbar/navbar.component';
 import { SelectModule } from 'primeng/select';
 import { CvService } from '@services/cv.service';
-import { MessageService } from 'primeng/api';
+import { MessageService, ConfirmationService } from 'primeng/api';
+import { Dialog } from 'primeng/dialog';
 import { Toast } from 'primeng/toast';
 import { ButtonModule } from 'primeng/button';
-import { Ripple } from 'primeng/ripple';
+
 
 @Component({
   selector: 'app-cv-editor',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NavbarComponent,SelectModule, Toast, Ripple, ButtonModule],
+  imports: [CommonModule, ReactiveFormsModule, NavbarComponent,SelectModule, Toast, ButtonModule, Dialog],
   templateUrl: './cv-editor.component.html',
   styleUrls: ['./cv-editor.component.scss'],
-  providers: [MessageService]
+  providers: [MessageService, ConfirmationService]
 })
 export class CvEditorComponent implements OnInit {
+  visible: boolean = false;
   formCvSimple!: FormGroup;
   templateId!: string;
   componentToRender: any;
@@ -32,22 +34,9 @@ export class CvEditorComponent implements OnInit {
   currentYear: number = new Date().getFullYear();
   userId: string | null = null;
 
-month: { name: string; value: string }[] = [ 
-  { name: 'Janvier', value: '01' },
-  { name: 'Février', value: '02' },
-  { name: 'Mars', value: '03' },
-  { name: 'Avril', value: '04' },
-  { name: 'Mai', value: '05' },
-  { name: 'Juin', value: '06' },
-  { name: 'Juillet', value: '07' },
-  { name: 'Août', value: '08' },
-  { name: 'Septembre', value: '09' },
-  { name: 'Octobre', value: '10' },
-  { name: 'Novembre', value: '11' },
-  { name: 'Décembre', value: '12' }
-];
-
-
+  langues: {name:string, value:string}[] = [{name: 'Allemand', value: 'Allemand'},{name: 'Anglais', value: 'Anglais'},{name: 'Arabe', value: 'Arabe'},{name: 'Chinois', value: 'Chinois'},{name: 'Coréen', value: 'Coréen'},{name: 'Espagnol', value: 'Espagnol'},{name: 'Français', value: 'Français'},{name: 'Hindi', value: 'Hindi'},{name: 'Italien', value: 'Italien'},{name: 'Japonais', value: 'Japonais'},{name: 'Néerlandais', value: 'Néerlandais'},{name: 'Portugais', value: 'Portugais'},{name: 'Russe', value: 'Russe'},{name: 'Suédois', value: 'Suédois'},{name: 'Turc', value: 'Turc'}]
+  langLevel: {level:string, value:string}[] =[{level:'A1',value:'A1'},{level:'A2',value:'A2'},{level:'B1',value:'B1'},{level:'B2',value:'B2'},{level:'C1',value:'C1'},{level:'C2',value:'C2'},{level:'Langue maternelle',value:'Langue maternelle'}];
+  month: { name: string; value: string }[] = [ { name: 'Janvier', value: '01' },{ name: 'Février', value: '02' },{ name: 'Mars', value: '03' },{ name: 'Avril', value: '04' },{ name: 'Mai', value: '05' },{ name: 'Juin', value: '06' },{ name: 'Juillet', value: '07' },{ name: 'Août', value: '08' },{ name: 'Septembre', value: '09' },{ name: 'Octobre', value: '10' },{ name: 'Novembre', value: '11' },{ name: 'Décembre', value: '12' }];
 
   private userService = inject(UserService);
   private route = inject(ActivatedRoute);
@@ -74,13 +63,14 @@ month: { name: string; value: string }[] = [
 
     
     this.formCvSimple = new FormGroup({
+      cvName: new FormControl(''),
       lastName: new FormControl(''),
       firstName: new FormControl(''),
       email: new FormControl(''),
       phone: new FormControl(''),
       resume: new FormControl(''),
       city: new FormControl(''),
-      title: new FormControl(''),
+      profile: new FormControl(''),
       linkedIn: new FormControl(''),
       website: new FormControl(''),
       experiences: new FormArray([]),
@@ -110,18 +100,7 @@ month: { name: string; value: string }[] = [
     const idUser = this.userService.getUserId();
     if (idUser) {
       this.userId = idUser;
-      this.userService.getUser().subscribe({
-        next: (user) => {
-          this.formCvSimple.patchValue({
-            lastName: user.lastName ?? '',
-            firstName: user.firstName ?? '',
-            email: user.email ?? '',
-          });
-        },
-        error: (err) => {
-          console.error('Erreur récupération utilisateur :', err);
-        }
-      });
+      // this.userService.getUser().subscribe({next: (user) => {this.formCvSimple.patchValue({lastName: user.lastName ?? '',firstName: user.firstName ?? '',email: user.email ?? '',});},error: (err) => {console.error('Erreur récupération utilisateur :', err);}});
     } else {
       this.userId = null;
     }
@@ -139,36 +118,37 @@ month: { name: string; value: string }[] = [
     return this.experiences.at(expIndex).get('missions') as FormArray;
   }
 
-    onSave() {
-      if (!this.userId) {
-        this.messageService.add({severity: 'warn',summary: 'Utilisateur non connecté',detail: 'Vous devez être connecté pour enregistrer votre CV.'});
-        return;
-      }
-
-      if (this.formCvSimple.valid) {
-        const formData = {
-          ...this.formCvSimple.value,
-          templateId: this.templateId,
-        };
-
-        this.cvService.createCv(formData).subscribe({
-          next: (savedCv) => {
-            this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'CV sauvegardé avec succès' });
-          },
-          error: (error) => {
-            console.error('Erreur sauvegarde CV :', error);
-            this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Une erreur est survenue' });
-          }
-        });
-      } else {
-        this.formCvSimple.markAllAsTouched();
-        this.errorChecker.checkCvEditorFormErrors(this.formCvSimple, this.formErrors);
-      }
+  onSave() {
+    if (!this.userId) {
+      this.messageService.add({severity: 'warn',summary: 'Utilisateur non connecté',detail: 'Vous devez être connecté pour enregistrer votre CV.'});
+      return;
     }
 
-  onDownload(){
+    if (this.formCvSimple.valid) {
+      const formData = {
+        ...this.formCvSimple.value,
+        templateId: this.templateId,
+      };
 
+      this.cvService.createCv(formData).subscribe({
+        next: (savedCv) => {
+          this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'CV sauvegardé avec succès' });
+        },
+        error: (error) => {
+          console.error('Erreur sauvegarde CV :', error);
+          this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Une erreur est survenue' });
+        }
+      });
+    } else {
+      this.formCvSimple.markAllAsTouched();
+      this.errorChecker.checkCvEditorFormErrors(this.formCvSimple, this.formErrors);
+    }
   }
+
+  onConfirm(){
+    this.visible = true;
+  }
+  onDownload(){}
 
 
     addExperience() {
