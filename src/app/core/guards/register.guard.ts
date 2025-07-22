@@ -7,7 +7,7 @@ export const registerGuard: CanActivateFn = () => {
   let router = inject(Router);
 
   if (userService.isAuthenticated()) {
-    router.navigate(['/dashboard']);
+    router.navigate(['/templates']);
     return false;
   } else {
     return true;

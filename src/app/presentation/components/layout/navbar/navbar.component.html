@@ -1,6 +1,28 @@
 <nav>
     <section>
-        <a routerLink="/"><img class="logo" src="/logo.png" alt=""></a>
-        <a routerLink="/dashboard">Dashboard</a>
+        <div class="w-full flex justify-start">
+        <a routerLink="/"><img class="logo" src="/logo.png" alt="Logo" /></a>
+        </div>
+
+        <div class="w-full flex justify-end">
+        <button type="button" (click)="toggleMenu()">
+            <i class="pi" [ngClass]="isMenuOpen ? 'pi-times' : 'pi-bars'"></i>
+        </button>
+        </div>
+
+        @if (isMenuOpen || isAnimatingOut){
+            <div class="menu"[ngClass]="{ 'in': isMenuOpen && !isAnimatingOut, 'out': isAnimatingOut }">
+                @if (user()) {
+                    <a routerLink="/mesCvs"><i class="pi pi-file"></i><span>Mes CV</span></a>
+                    <a routerLink="/profil"><i class="pi pi-user"></i><span>Mon compte</span></a>
+                    <hr />
+                    <a  (click)="logout()" class="logout"><i class="pi pi-sign-out"></i> Déconnexion</a>
+                } @else {
+                    <a routerLink="/login"><i class="pi pi-sign-in"></i><span>Se connecter</span></a>
+                    <a routerLink="/register"><i class="pi pi-user-plus"></i><span>S'inscrire</span></a>
+                }
+            </div>
+        }
+
     </section>
 </nav>

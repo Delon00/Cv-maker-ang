@@ -51,9 +51,8 @@ onRegister() {
     this.userService.register(this.userRegister).subscribe({
       next: (response: any) => {
         if (response && response.message === 'User registered successfully') {
-          this.localStorage.createToken(response.token);
-          this.userService.saveUserData(response.user);
-          this.router.navigate(['/dashboard']);
+          this.localStorage.createToken(response.accessToken);
+          this.router.navigate(['/templates']);
         } else {
           console.error('Réponse inattendue', response);
           this.errorMessage = response.message || "Réponse inattendue du serveur.";

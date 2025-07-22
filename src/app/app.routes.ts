@@ -27,7 +27,7 @@ export const routes: Routes = [
         { path: 'cv-editor/:templateId',component: CvEditorComponent},
         { path: 'simple', component: SimpleComponent},
 
-        { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
+        { path: 'mes_cvs', component: DashboardComponent, canActivate: [authGuard] },
 
 
         { path: 'admin', component: AdminComponent, canActivate: [AdminGuard], 

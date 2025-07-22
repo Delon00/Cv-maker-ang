@@ -7,7 +7,7 @@ export const homeGuard: CanActivateFn = () => {
   let router = inject (Router);
 
   if (userService.isAuthenticated()){
-    router.navigate(['/dashboard']);
+    router.navigate(['/templates']);
     return false;
   }
   return true

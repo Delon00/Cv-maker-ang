@@ -135,6 +135,7 @@ export class CvEditorComponent implements OnInit {
       this.cvService.createCv(formData).subscribe({
         next: (savedCv) => {
           this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'CV sauvegardé avec succès' });
+          this.visible = false;
         },
         error: (error) => {
           console.error('Erreur sauvegarde CV :', error);

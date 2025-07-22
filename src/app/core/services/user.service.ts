@@ -1,67 +1,59 @@
-
 import { inject, Injectable } from '@angular/core';
-import { LocalStorageService } from '@services/local-storage.service';
-import User from '@interfaces/user.interface';
-import Register from '@interfaces/register.interface';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-import { Router } from '@angular/router';
-import decodeJwt from '@utils/decodeJwt';
 import { environment } from '@environments/environment';
-
-
+import { LocalStorageService } from '@services/local-storage.service';
+import decodeJwt from '@utils/decodeJwt';
+import User from '@interfaces/user.interface';
+import Register from '@interfaces/register.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
+  private http = inject(HttpClient);
+  private localService = inject(LocalStorageService);
+  private router = inject(Router);
+
   private authUrl = environment.authUrl;
   private userUrl = environment.userUrl;
 
-
-
-  private http = inject (HttpClient);
-  private localService = inject (LocalStorageService);
-  private router = inject (Router) 
-
-
-  private currentUserSubject = new BehaviorSubject<any>(null);
+  private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasToken());
+  public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
-  private handleError(error: HttpErrorResponse) {
-    let errorMessage = '';
-    if (error.error instanceof HttpErrorResponse) {
-      console.error('Le client a retourné:', error.error.message);
-      errorMessage = error.error.message;
-    } else {
-      console.error(`Le backend a retourné le code ${error.status}, le corps était:`, error.error);
-      errorMessage = error.error.message || error.statusText;
-    }
-    console.log(errorMessage);
-    return throwError(() => ({ status: error.status, message: errorMessage }));
-    
+
+
+
+  private hasToken(): boolean {
+    return !!this.localService.getToken();
   }
 
+  refreshAuthStatus(): void {
+    this.isAuthenticatedSubject.next(this.hasToken());
+  }
 
   getUserId(): string | null {
     const token = this.localService.getToken();
     if (!token) return null;
+
     try {
       const decoded: any = decodeJwt(token);
       return decoded.userId;
-
     } catch (error) {
       console.error('Erreur lors du décodage du token:', error);
       return null;
     }
-    
   }
 
   getUserPlan(): string | null {
     const token = this.localService.getToken();
     if (!token) return null;
+
     try {
       const decoded: any = decodeJwt(token);
       return decoded.plan;
@@ -71,29 +63,24 @@ export class UserService {
     }
   }
 
-  getUser(): Observable<any> {
+  getUser(): Observable<User | null> {
     const userId = this.getUserId();
-    return this.http.get<any>(`${this.userUrl}/${userId}`, {
-      headers: new HttpHeaders({ 'Authorization': `Bearer ${this.localService.getToken()}` })
-    }).pipe(tap(user => this.currentUserSubject.next(user)),catchError(this.handleError));
-    
-  }
-  
-  getAllUsers() {
-    return this.http.get<any[]>(`${this.userUrl}/all`, {
-      headers: new HttpHeaders({
-        Authorization: `Bearer ${this.localService.getToken()}`
-      })
-    }).pipe(
+    if (!userId) {
+      return throwError(() => ({ status: 401, message: 'Utilisateur non authentifié' }));
+    }
+
+    return this.http.get<User>(`${this.userUrl}/${userId}`).pipe(
+      tap(user => this.currentUserSubject.next(user)),
       catchError(this.handleError)
     );
   }
 
 
-  saveUserData(user: User): void {
-    if (typeof window !== 'undefined') {
-      sessionStorage.setItem('user', JSON.stringify(user));
-    }
+  getAllUsers(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.userUrl}/all`, {
+    }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   register(user: Register): Observable<any> {
@@ -105,17 +92,45 @@ export class UserService {
   login(credentials: { email: string; password: string }): Observable<any> {
     return this.http.post<any>(`${this.authUrl}/login`, credentials, {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-    }).pipe(catchError(this.handleError));
+    }).pipe(
+      tap(res => {
+        if (res?.accessToken) {
+          this.localService.createToken(res.accessToken);
+          this.refreshAuthStatus();
+          this.currentUserSubject.next(res.user);
+        }
+      }),
+      catchError(this.handleError)
+    );
   }
 
   logout(): void {
     this.localService.destroyToken();
     this.currentUserSubject.next(null);
+    this.refreshAuthStatus();
     this.router.navigate(['/']);
   }
 
+
+
   isAuthenticated(): boolean {
-    let token: string | null = this.localService.getToken();
-    return token !== null;
+    return this.hasToken();
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    let message = 'Une erreur inconnue est survenue';
+    if (error.error?.message) {
+      message = error.error.message;
+    } else if (typeof error.error === 'string') {
+      message = error.error;
+    } else if (error.statusText) {
+      message = error.statusText;
+    }
+
+    console.error(`[UserService] Erreur HTTP: ${message}`, error);
+    return throwError(() => ({
+      status: error.status,
+      message: message
+    }));
   }
 }

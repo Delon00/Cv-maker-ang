@@ -38,18 +38,11 @@ export class LoginComponent implements OnInit {
       this.isLoading = true;
       this.userService.login(this.formLogin.value).subscribe({
         next: (response: any) => {
-          this.userService.saveUserData(response.user);
-          this.localStorage.createToken(response.accessToken);
-
-          // console.log('RESPONSE:', response);
-          // console.log('TOKEN:', response.accessToken);
-          // console.log('DECODED:', decodeJwt(response.accessToken));
-
           const userPlan = response.user?.plan;
           if (userPlan === 'admin') {
             this.router.navigate(['/admin']);
           } else {
-            this.router.navigate(['/dashboard']);
+            this.router.navigate(['/templates']);
           }
           this.isLoading = false;
         },
