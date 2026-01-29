@@ -1,78 +1,137 @@
-<main>
-    <section>
-        <form [formGroup]="formRegister" (ngSubmit)="onRegister()" class="form">
-        <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Inscription</h1>
-            @if (errorMessage) {<p class="message-error">{{ errorMessage }}</p>}
-        <!-- Nom -->
-        <div class="flex flex-col w-full my-2">
-            <label for="lastName" class="text-gray-700 mb-1">lastName</label>
-            <input formControlName="lastName"type="text"id="lastName"placeholder="Votre nom"class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"/>
-            @if (formErrors['lastName']) {<span class="text-red-600 text-sm mt-1">{{ formErrors['lastName'] }}</span>}
+<main class="register-page">
+    
+    <div class="background-container">
+        <div class="grid-pattern"></div>
+        <div class="circle top-right"></div>
+        <div class="circle bottom-left"></div>
+    </div>
+
+    <section class="relative z-10 flex items-center justify-center min-h-screen px-4 py-10">
+        
+        <div class="register-card w-full max-w-lg p-8 relative">
+            
+            <div class="absolute -inset-1 bg-gradient-to-r from-orange-500 to-purple-600 rounded-2xl blur opacity-20 pointer-events-none"></div>
+
+            <div class="relative z-10">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-bold text-white mb-2">Créer un compte 🚀</h1>
+                    <p class="text-gray-400 text-sm">Rejoignez l'aventure et propulsez votre carrière.</p>
+                </div>
+
+                <form [formGroup]="formRegister" (ngSubmit)="onRegister()" class="flex flex-col gap-5">
+                    
+                    @if (errorMessage) {
+                        <div class="bg-red-500/10 border border-red-500/20 text-red-400 text-sm p-3 rounded-lg flex items-center gap-2">
+                            <i class="pi pi-exclamation-circle"></i>
+                            {{ errorMessage }}
+                        </div>
+                    }
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label for="lastName">Nom</label>
+                            <div class="input-wrapper">
+                                <i class="pi pi-user absolute left-4 top-1/2 -translate-y-1/2 text-gray-500"></i>
+                                <input 
+                                    formControlName="lastName" 
+                                    type="text" 
+                                    id="lastName" 
+                                    placeholder="Doe"
+                                    [class.error]="formErrors['lastName']"
+                                />
+                            </div>
+                            @if (formErrors['lastName']) { <span class="field-error">{{ formErrors['lastName'] }}</span> }
+                        </div>
+
+                        <div class="form-group">
+                            <label for="firstName">Prénom</label>
+                            <div class="input-wrapper">
+                                <i class="pi pi-user absolute left-4 top-1/2 -translate-y-1/2 text-gray-500"></i>
+                                <input 
+                                    formControlName="firstName" 
+                                    type="text" 
+                                    id="firstName" 
+                                    placeholder="John"
+                                    [class.error]="formErrors['firstName']"
+                                />
+                            </div>
+                            @if (formErrors['firstName']) { <span class="field-error">{{ formErrors['firstName'] }}</span> }
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <div class="input-wrapper">
+                            <i class="pi pi-envelope absolute left-4 top-1/2 -translate-y-1/2 text-gray-500"></i>
+                            <input 
+                                formControlName="email" 
+                                type="email" 
+                                id="email" 
+                                placeholder="john.doe@example.com"
+                                [class.error]="formErrors['email']"
+                            />
+                        </div>
+                        @if (formErrors['email']) { <span class="field-error">{{ formErrors['email'] }}</span> }
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Mot de passe</label>
+                        <div class="input-wrapper">
+                            <i class="pi pi-lock absolute left-4 top-1/2 -translate-y-1/2 text-gray-500"></i>
+                            <input 
+                                formControlName="password" 
+                                type="password" 
+                                id="password" 
+                                placeholder="8 caractères min."
+                                [class.error]="formErrors['password']"
+                            />
+                        </div>
+                        @if (formErrors['password']) { <span class="field-error">{{ formErrors['password'] }}</span> }
+                    </div>
+
+                    <div class="form-group">
+                        <label for="passwordConfirm">Confirmer</label>
+                        <div class="input-wrapper">
+                            <i class="pi pi-check-circle absolute left-4 top-1/2 -translate-y-1/2 text-gray-500"></i>
+                            <input 
+                                formControlName="passwordConfirm" 
+                                type="password" 
+                                id="passwordConfirm" 
+                                placeholder="Répétez le mot de passe"
+                                [class.error]="formErrors['passwordConfirm']"
+                            />
+                        </div>
+                        @if (formErrors['passwordConfirm']) { <span class="field-error">{{ formErrors['passwordConfirm'] }}</span> }
+                    </div>
+
+                    <button type="submit" class="submit-btn mt-2" [disabled]="isLoading">
+                        @if (!isLoading) {
+                            <span>S'inscrire</span>
+                            <i class="pi pi-sparkles"></i>
+                        } @else {
+                            <i class="pi pi-spin pi-spinner text-lg"></i>
+                        }
+                    </button>
+
+                    <div class="relative flex py-2 items-center">
+                        <div class="flex-grow border-t border-white/10"></div>
+                        <span class="flex-shrink-0 mx-4 text-gray-500 text-xs uppercase tracking-wider">Ou</span>
+                        <div class="flex-grow border-t border-white/10"></div>
+                    </div>
+
+                    <button type="button" (click)="LinkedinLog()" class="social-btn linkedin">
+                        <i class="pi pi-linkedin text-xl"></i>
+                        <span>S'inscrire avec LinkedIn</span>
+                    </button>
+
+                    <div class="text-center mt-2 text-sm text-gray-400">
+                        Déjà un compte ? 
+                        <a routerLink="/login" class="text-white font-semibold hover:text-orange-400 transition-colors">
+                            Se connecter
+                        </a>
+                    </div>
+                </form>
+            </div>
         </div>
-
-        <!-- Prénom -->
-        <div class="flex flex-col w-full my-2">
-            <label for="firstName" class="text-gray-700 mb-1">Prénom</label>
-            <input formControlName="firstName"type="text"id="firstName"placeholder="Votre prénom"class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"/>
-            @if (formErrors['firstName']) {<span class="text-red-600 text-sm mt-1">{{ formErrors['firstName'] }}</span>}
-        </div>
-
-        <!-- Email -->
-        <div class="flex flex-col w-full my-2">
-            <label for="email" class="text-gray-700 mb-1">Email</label>
-            <input formControlName="email"type="email"id="email"placeholder="me@email.fr"class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"/>
-            @if (formErrors['email']) {<span class="text-red-600 text-sm mt-1">{{ formErrors['email'] }}</span>}
-        </div>
-
-        <!-- Password -->
-        <div class="flex flex-col w-full my-2">
-            <label for="password" class="text-gray-700 mb-1">Mot de passe</label>
-            <input
-            formControlName="password"
-            type="password"
-            id="password"
-            placeholder="********"
-            class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-            />
-            @if (formErrors['password']) {
-            <span class="text-red-600 text-sm mt-1">{{ formErrors['password'] }}</span>
-            }
-        </div>
-
-        <!-- Password confirm -->
-        <div class="flex flex-col w-full my-2">
-            <label for="passwordConfirm" class="text-gray-700 mb-1">Confirmer le mot de passe</label>
-            <input
-            formControlName="passwordConfirm"
-            type="password"
-            id="passwordConfirm"
-            placeholder="********"
-            class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-            />
-            @if (formErrors['passwordConfirm']) {
-            <span class="text-red-600 text-sm mt-1">{{ formErrors['passwordConfirm'] }}</span>
-            }
-        </div>
-
-        <button type="submit" class="my-4 w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-lg transition-colors duration-300">
-            @if (!isLoading) {S'inscrire} @else {<i class="pi pi-spin pi-spinner"></i>}
-        </button>
-
-        <div class="w-full flex justify-between items-center mb-2">
-            <hr class="border border-gray-300 my-3 w-full" />
-            <p class="mx-4">ou</p>
-            <hr class="border border-gray-300 my-3 w-full" />
-        </div>
-
-        <button
-            type="button"
-            (click)="LinkedinLog()"
-            class="linkedin-btn py-2 transition-colors duration-300"
-        >
-            <i class="pi pi-linkedin mx-2"></i>Linkedin
-        </button>
-
-        <a routerLink="/login" class="mt-6 text-black my-2 hover:text-orange-500">Je suis déjà inscrit ☝️🤓</a>
-        </form>
     </section>
 </main>

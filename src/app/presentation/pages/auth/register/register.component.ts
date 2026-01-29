@@ -1,26 +1,30 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common'; // Recommandé pour les directives comme @if ou ngClass
 import { UserService } from '@services/user.service';
-import { LocalStorageService } from '@services/local-storage.service';
-import { Router,RouterLink } from '@angular/router';
 import Register from '@interfaces/register.interface';
 import { ConfirmPasswordValidator } from '@utils/confirmPasswordValidator';
 import FormErrorChecker from '@utils/formErrorChecker';
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule, RouterLink],
+  standalone: true,
+  imports: [ReactiveFormsModule, RouterLink, CommonModule],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.scss'
+  styleUrls: ['./register.component.scss']
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
+  // Utils
   errorChecker = FormErrorChecker();
-  formErrors: { [key: string]: string } = {};
+  
+  // Form & State
   formRegister!: FormGroup;
+  formErrors: { [key: string]: string } = {};
   errorMessage: string = '';
-  emailError: string = '';
-  passwordError: string = '';
   isLoading: boolean = false;
+  
+  // Data Model
   userRegister: Register = {
     lastName: '',
     firstName: '',
@@ -29,9 +33,9 @@ export class RegisterComponent {
     passwordConfirm: '',
   };
 
-  private router = inject(Router) ;
-  private userService = inject(UserService) ;
-  private localStorage = inject(LocalStorageService);
+  // Injections
+  private router = inject(Router);
+  private userService = inject(UserService);
 
   ngOnInit(): void {
     this.formRegister = new FormGroup({
@@ -43,47 +47,51 @@ export class RegisterComponent {
     }, { validators: ConfirmPasswordValidator });
   }
 
-onRegister() {
-  if (this.formRegister.valid) {
-    this.isLoading = true;
-    this.userRegister = this.formRegister.value;
+  onRegister() {
+    this.errorMessage = ''; // Reset error msg
 
-    this.userService.register(this.userRegister).subscribe({
-      next: (response: any) => {
-        if (response && response.message === 'User registered successfully') {
-          this.localStorage.createToken(response.accessToken);
+    if (this.formRegister.valid) {
+      this.isLoading = true;
+      this.userRegister = this.formRegister.value;
+
+      this.userService.register(this.userRegister).subscribe({
+        next: () => {
+          // ✅ SUCCÈS : 
+          // Avec les cookies HttpOnly, le token est géré par le navigateur.
+          // On redirige vers les templates (si auto-login) ou vers login.
+          // Ici, on suppose un auto-login ou une redirection directe.
           this.router.navigate(['/templates']);
-        } else {
-          console.error('Réponse inattendue', response);
-          this.errorMessage = response.message || "Réponse inattendue du serveur.";
-        }
-      },
-      error: (error: any) => {
-        console.log(error.status, error.message);
-        if (error.status === 409) {
-          this.errorMessage = 'Cet email est déjà enregistré. Veuillez utiliser un autre email.';
+        },
+        error: (error: any) => {
           this.isLoading = false;
-        } else {
-          this.errorMessage = "Erreur serveur. Veuillez réessayer plus tard.";
+          
+          // Gestion spécifique UX : Email déjà pris
+          if (error.status === 409) {
+            this.errorMessage = 'Cet email est déjà utilisé. Veuillez en choisir un autre.';
+            // On peut aussi marquer le champ email en erreur manuellement si besoin
+            this.formRegister.get('email')?.setErrors({ notUnique: true });
+          } else {
+            // Les autres erreurs (500, etc.) sont loggées par l'Interceptor,
+            // mais on affiche un message générique ici pour l'utilisateur.
+            this.errorMessage = "Impossible de créer le compte. Veuillez vérifier vos informations.";
+          }
+        },
+        complete: () => {
           this.isLoading = false;
         }
-      },
-      complete: () => {
-        this.isLoading = false;
-      }
-    });
-  } else {
-    this.formRegister.markAllAsTouched();
-    this.formErrors = {};
-    this.errorChecker.checkRegisterFormErrors(this.formRegister, this.formErrors);
-    this.errorMessage = "Veuillez corriger les erreurs du formulaire.";
-  }
-}
-
-
-  LinkedinLog(){
-
+      });
+    } else {
+      // Gestion des erreurs de formulaire (champs vides, etc.)
+      this.formRegister.markAllAsTouched();
+      this.formErrors = {};
+      this.errorChecker.checkRegisterFormErrors(this.formRegister, this.formErrors);
+      this.errorMessage = "Veuillez corriger les erreurs indiquées en rouge.";
+    }
   }
 
+  LinkedinLog() {
+    console.log('LinkedIn Registration logic here');
+    // Idéalement : Redirection vers une URL backend qui gère OAuth
+    // window.location.href = `${environment.authUrl}/linkedin`;
+  }
 }
-

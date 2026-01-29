@@ -1,1 +1,115 @@
-<button class="flex gap-3 items-center cursor-pointer my-2 hover:text-red-500" (click)="logout()"> <i class="pi pi-sign-out"></i> Déconnexion</button>
+<app-navbar></app-navbar>
+
+<main class="dashboard-page">
+    
+    <div class="background-container">
+        <div class="grid-pattern"></div>
+        <div class="circle top-right"></div>
+        <div class="circle bottom-left"></div>
+    </div>
+
+    <section class="content-container">
+        
+        <header class="dashboard-header">
+            <div class="header-text">
+                <h1>Mon Espace</h1>
+                <p>Gérez vos CVs et boostez votre carrière.</p>
+            </div>
+            <button (click)="createNew()" class="create-btn">
+                <i class="pi pi-plus"></i>
+                Nouveau CV
+            </button>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="icon-box orange">
+                    <i class="pi pi-file"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="value">{{ myCvs.length }}</span>
+                    <span class="label">CV Créés</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="icon-box purple">
+                    <i class="pi pi-download"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="value">12</span>
+                    <span class="label">Téléchargements</span>
+                </div>
+            </div>
+             <div class="stat-card premium-card">
+                <div class="stat-info">
+                    <span class="label text-orange-400">Plan Actuel</span>
+                    <span class="value text-white">Gratuit</span>
+                </div>
+                <button class="upgrade-link">Passer Pro <i class="pi pi-bolt"></i></button>
+            </div>
+        </div>
+
+        <div class="cv-section">
+            <h2 class="section-title">Mes Documents</h2>
+
+            @if (myCvs.length === 0) {
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <i class="pi pi-folder-open"></i>
+                    </div>
+                    <h3>Vous n'avez aucun CV pour le moment</h3>
+                    <p>Commencez par choisir un modèle professionnel.</p>
+                    <button (click)="createNew()" class="cta-empty">
+                        Créer mon premier CV
+                    </button>
+                </div>
+            } @else {
+                <div class="cv-grid">
+                    @for (cv of myCvs; track cv.id) {
+                        <div class="cv-card group">
+                            <div class="card-preview" (click)="editCv(cv.id)">
+                                @if (cv.thumbnail) {
+                                    <img [src]="cv.thumbnail" alt="Aperçu CV" />
+                                } @else {
+                                    <div class="placeholder-preview">
+                                        <span class="template-name">{{ cv.templateName }}</span>
+                                        <div class="fake-lines">
+                                            <span></span><span></span><span></span>
+                                        </div>
+                                    </div>
+                                }
+                                
+                                <div class="overlay">
+                                    <button (click)="editCv(cv.id); $event.stopPropagation()" title="Éditer">
+                                        <i class="pi pi-pencil"></i>
+                                    </button>
+                                    <button (click)="downloadCv(cv.id); $event.stopPropagation()" title="Télécharger">
+                                        <i class="pi pi-download"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="card-footer">
+                                <div class="cv-info">
+                                    <h4 class="truncate" title="{{ cv.title }}">{{ cv.title }}</h4>
+                                    <span class="date">Modifié le {{ cv.updatedAt | date:'dd MMM yyyy' }}</span>
+                                </div>
+                                <button (click)="deleteCv(cv.id)" class="delete-btn" title="Supprimer">
+                                    <i class="pi pi-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    }
+                    
+                    <div class="cv-card create-new-card" (click)="createNew()">
+                        <div class="dashed-border">
+                            <i class="pi pi-plus"></i>
+                            <span>Créer un autre CV</span>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+    </section>
+</main>

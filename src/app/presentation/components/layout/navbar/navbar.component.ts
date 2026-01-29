@@ -1,28 +1,23 @@
-import { Component, inject, computed, signal, effect } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { UserService } from '@app/core/services/user.service';
-import { AsyncPipe, NgIf, NgClass } from '@angular/common';
+import { UserService } from '@services/user.service';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterLink, NgClass],
+  imports: [CommonModule, RouterLink], // NgClass est inclus dans CommonModule
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent {
+  // États du menu mobile
   isMenuOpen = false;
   isAnimatingOut = false;
 
-  readonly user = signal<any | null>(null);
+  // Injection du service
   private userService = inject(UserService);
-
-  constructor() {
-    effect(() => {
-      this.userService.isAuthenticated$.subscribe(user => this.user.set(user));
-    });
-  }
+  user = this.userService.currentUser; 
 
   toggleMenu(): void {
     if (this.isMenuOpen) {
@@ -30,7 +25,7 @@ export class NavbarComponent {
       setTimeout(() => {
         this.isMenuOpen = false;
         this.isAnimatingOut = false;
-      }, 600);
+      }, 600); // Doit correspondre à la durée de ton animation CSS
     } else {
       this.isMenuOpen = true;
     }
@@ -38,6 +33,6 @@ export class NavbarComponent {
 
   logout(): void {
     this.userService.logout();
+    this.isMenuOpen = false; // On ferme le menu après déconnexion
   }
 }
-

@@ -1,28 +1,26 @@
-
-import { inject, Injectable } from '@angular/core';
-import {CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router} from '@angular/router';
+import { CanActivateFn, Router } from '@angular/router';
+import { inject } from '@angular/core';
 import { UserService } from '@services/user.service';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class AdminGuard implements CanActivate {
+export const adminGuard: CanActivateFn = () => {
+  const userService = inject(UserService);
+  const router = inject(Router);
 
-  private userService = inject(UserService);
-  private router = inject (Router);
+  // 1. On récupère les valeurs des signaux
+  const isAuth = userService.isAuthenticated();
+  const plan = userService.userPlan(); // Attention à la casse : userPlan() et pas UserPlan()
 
-
-  canActivate(
-    next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): boolean | UrlTree {
-    const isAdmin = this.userService.getUserPlan() === 'admin';
-    const isLoggedIn = this.userService.isAuthenticated();
-
-    if (isAdmin && isLoggedIn) {
-      return true;
-    } else {
-      return this.router.parseUrl('/');
-    }
+  // 2. Vérification stricte
+  if (isAuth && plan === 'admin') {
+    return true;
   }
-}
+
+  // 3. Redirection si refusé
+  // Si l'utilisateur n'est même pas connecté, on le renvoie au login
+  if (!isAuth) {
+    return router.createUrlTree(['/login']);
+  }
+
+  // Si connecté mais pas admin, on le renvoie à l'accueil (ou dashboard)
+  return router.createUrlTree(['/']);
+};

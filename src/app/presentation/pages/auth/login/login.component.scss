@@ -1,131 +1,210 @@
-main{
-    background-image: url('/media/login-bg.jpg');
+.login-page {
+    position: relative;
+    min-height: 100vh;
+    width: 100%;
+    background-color: #050505;
+    font-family: 'Inter', sans-serif;
+    overflow: hidden;
 
-    height: 100dvh;
-    section{
-        height: 100%;
-        width: 100%;
-        background: rgba(0, 0, 0, 0.404);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(0, 0, 0, 0.3);
-        display: flex;
+    // --- Background Effects (Identique à la Home pour transition fluide) ---
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        opacity: 0.05;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        pointer-events: none;
+    }
 
-        .form{
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 1rem 2rem;
-            min-height: 400px;
-            width: 400px;
-            background-color: #fff;
-            border-radius: 15px;
-            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-            position: relative;
-            overflow: hidden;
-            
+    .grid-pattern {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        background-size: 50px 50px;
+        mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+    }
 
-            h1{
-                text-align: center;
-                color: #FB923C;
-                font-size: 2rem;
-                font-weight: bold;
-            }
-            .form::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                height: 1px;
-                background: linear-gradient(90deg,transparent,rgba(255, 255, 255, 0.8),transparent);
-            }
+    .background-container {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
 
-            .form::after {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 1px;
-                height: 100%;
-                background: linear-gradient(180deg,rgba(255, 255, 255, 0.8),transparent,rgba(255, 255, 255, 0.3));
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.5;
+            animation: float 10s infinite ease-in-out;
+
+            &.top-left {
+                top: -10%;
+                left: -10%;
+                width: 600px;
+                height: 600px;
+                background: radial-gradient(circle, rgba(249, 115, 22, 0.3), transparent 70%);
             }
 
-
-            input{
-                padding: 0.3rem 0.5rem;
-                border-radius: 10px;
-                background-color: #fff;
-                width: 100%;
+            &.bottom-right {
+                bottom: -10%;
+                right: -10%;
+                width: 500px;
+                height: 500px;
+                background: radial-gradient(circle, rgba(220, 38, 38, 0.2), transparent 70%);
+                animation-delay: -5s;
             }
-            .form-group{
-                padding: 0.5rem 0;
-
-                .label{
-                    font-size: 1.1rem;
-                    color: #fff;
-                    margin:0.2rem 0;
-                }
-                display: flex;
-                flex-direction: column;
-                justify-content: space-evenly;
-            }
-
-            .linkedin-btn{
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              background-color: #0a66c2;
-              color: #fff;
-              font-weight: 600;
-              width: 100%;
-              border-radius: 15px;
-              transition: cubic-bezier(0.075, 0.82, 0.165, 1);
-            }
-            .linkedin-btn:hover{
-              background-color: #07437e;
-            }
-
         }
     }
 }
 
-.glass-card {
-  width: 240px;
-  height: 360px;
-
+@keyframes float {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(20px, 20px); }
 }
 
-.glass-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.8),
-    transparent
-  );
+// --- Card Styling ---
+.login-card {
+    background: rgba(20, 20, 20, 0.6); // Fond très sombre et transparent
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+
+    // Effet "border gradient" subtil en haut
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 24px;
+        padding: 1px;
+        background: linear-gradient(to bottom, rgba(255,255,255,0.1), transparent);
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+    }
 }
 
-.glass-card::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 1px;
-  height: 100%;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.8),
-    transparent,
-    rgba(255, 255, 255, 0.3)
-  );
+// --- Form Elements ---
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    label {
+        color: #a1a1aa; // text-gray-400
+        font-size: 0.875rem;
+        font-weight: 500;
+        margin-left: 4px;
+    }
+
+    .input-wrapper {
+        position: relative;
+        
+        input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px 16px 12px 42px; // Padding left pour l'icône
+            color: white;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            outline: none;
+
+            &::placeholder {
+                color: rgba(255, 255, 255, 0.2);
+            }
+
+            &:focus {
+                border-color: #f97316; // Orange
+                background: rgba(249, 115, 22, 0.05);
+                box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.1);
+                
+                ~ i { color: #f97316; } // Change la couleur de l'icône au focus
+            }
+
+            &.error {
+                border-color: #ef4444;
+                &:focus { box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1); }
+            }
+
+            // Hack pour l'autofill Chrome en dark mode
+            &:-webkit-autofill,
+            &:-webkit-autofill:hover, 
+            &:-webkit-autofill:focus {
+                -webkit-text-fill-color: white;
+                -webkit-box-shadow: 0 0 0px 1000px #0a0a0a inset;
+                transition: background-color 5000s ease-in-out 0s;
+            }
+        }
+    }
+
+    .field-error {
+        color: #ef4444;
+        font-size: 0.75rem;
+        margin-left: 4px;
+    }
+}
+
+// --- Buttons ---
+.submit-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+    color: white;
+    padding: 14px;
+    border-radius: 12px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(249, 115, 22, 0.3);
+
+    &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(249, 115, 22, 0.4);
+        filter: brightness(1.1);
+    }
+
+    &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+}
+
+.social-btn {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.2s;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    &.linkedin {
+        &:hover {
+            background: rgba(10, 102, 194, 0.2);
+            border-color: rgba(10, 102, 194, 0.5);
+            color: #fff; 
+        }
+    }
 }

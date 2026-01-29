@@ -1,136 +1,116 @@
-import { inject, Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { inject, Injectable, signal, computed } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { Observable, tap, of, catchError, map } from 'rxjs';
 import { environment } from '@environments/environment';
-import { LocalStorageService } from '@services/local-storage.service';
-import decodeJwt from '@utils/decodeJwt';
-import User from '@interfaces/user.interface';
-import Register from '@interfaces/register.interface';
 
+// Assure-toi que ces interfaces existent et correspondent à ton DTO backend
+import User from '@interfaces/user.interface';
+import Login from '@interfaces/login.interface';
+import Register from '@interfaces/register.interface';
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private http = inject(HttpClient);
-  private localService = inject(LocalStorageService);
-  private router = inject(Router);
-
-  private authUrl = environment.authUrl;
-  private userUrl = environment.userUrl;
-
-  private currentUserSubject = new BehaviorSubject<User | null>(null);
-  public currentUser$ = this.currentUserSubject.asObservable();
-
-  private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasToken());
-  public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
+  private readonly http = inject(HttpClient);
+  private readonly router = inject(Router);
 
 
+  private readonly authUrl = environment.authUrl;
+  private readonly userUrl = environment.userUrl;
 
 
-  private hasToken(): boolean {
-    return !!this.localService.getToken();
-  }
+  private _currentUser = signal<User | null>(null);
 
-  refreshAuthStatus(): void {
-    this.isAuthenticatedSubject.next(this.hasToken());
-  }
-
-  getUserId(): string | null {
-    const token = this.localService.getToken();
-    if (!token) return null;
-
-    try {
-      const decoded: any = decodeJwt(token);
-      return decoded.userId;
-    } catch (error) {
-      console.error('Erreur lors du décodage du token:', error);
-      return null;
-    }
-  }
-
-  getUserPlan(): string | null {
-    const token = this.localService.getToken();
-    if (!token) return null;
-
-    try {
-      const decoded: any = decodeJwt(token);
-      return decoded.plan;
-    } catch (error) {
-      console.error('Erreur lors du décodage du token:', error);
-      return null;
-    }
-  }
-
-  getUser(): Observable<User | null> {
-    const userId = this.getUserId();
-    if (!userId) {
-      return throwError(() => ({ status: 401, message: 'Utilisateur non authentifié' }));
-    }
-
-    return this.http.get<User>(`${this.userUrl}/${userId}`).pipe(
-      tap(user => this.currentUserSubject.next(user)),
-      catchError(this.handleError)
-    );
-  }
+  public readonly currentUser = this._currentUser.asReadonly();
+  public readonly isAuthenticated = computed(() => !!this._currentUser());
+  public readonly isAdmin = computed(() => this._currentUser()?.plan === 'admin');
+  public readonly userPlan = computed(() => this._currentUser()?.plan ?? null); // Retourne 'admin', 'user', ou null
+  
 
 
-  getAllUsers(): Observable<User[]> {
-    return this.http.get<User[]>(`${this.userUrl}/all`, {
-    }).pipe(
-      catchError(this.handleError)
-    );
-  }
+  // --- LOGIQUE D'AUTHENTIFICATION ---
 
-  register(user: Register): Observable<any> {
-    return this.http.post<any>(`${this.authUrl}/register`, user, {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-    }).pipe(catchError(this.handleError));
-  }
-
-  login(credentials: { email: string; password: string }): Observable<any> {
-    return this.http.post<any>(`${this.authUrl}/login`, credentials, {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-    }).pipe(
-      tap(res => {
-        if (res?.accessToken) {
-          this.localService.createToken(res.accessToken);
-          this.refreshAuthStatus();
-          this.currentUserSubject.next(res.user);
-        }
+  /**
+   * RÉHYDRATATION DE SESSION (CRUCIAL)
+   * Appelé au démarrage de l'app (APP_INITIALIZER).
+   * Vérifie si le cookie HttpOnly est valide et récupère l'utilisateur.
+   */
+  fetchMe(): Observable<User | null> {
+    return this.http.get<User>(`${this.authUrl}/me`, { withCredentials: true }).pipe(
+      tap((user) => {
+        console.log('Session restaurée pour :', user.email);
+        this._currentUser.set(user);
       }),
-      catchError(this.handleError)
+      catchError((err) => {
+        this._currentUser.set(null);
+        return of(null);
+      })
     );
   }
 
+  /**
+   * CONNEXION
+   */
+  login(credentials: Login): Observable<User> {
+    return this.http.post<{ user: User }>(`${this.authUrl}/login`, credentials).pipe(
+      map(response => response.user), // On extrait l'user de la réponse
+      tap((user) => {
+        this._currentUser.set(user);
+        // Redirection intelligente
+        const target = user.plan === 'admin' ? '/admin' : '/profil';
+        this.router.navigate([target]);
+      })
+    );
+  }
+
+  /**
+   * DÉCONNEXION
+   */
   logout(): void {
-    this.localService.destroyToken();
-    this.currentUserSubject.next(null);
-    this.refreshAuthStatus();
-    this.router.navigate(['/']);
+    this.http.post(`${this.authUrl}/logout`, {}).subscribe({
+      next: () => this.finalizeLogout(),
+      error: (err) => {
+        console.warn('Erreur logout API (nettoyage local forcé)', err);
+        this.finalizeLogout();
+      }
+    });
   }
 
-
-
-  isAuthenticated(): boolean {
-    return this.hasToken();
+  /**
+   * Nettoyage de l'état local et redirection
+   */
+  private finalizeLogout(): void {
+    this._currentUser.set(null);
+    this.router.navigate(['/login']);
   }
 
-  private handleError(error: HttpErrorResponse) {
-    let message = 'Une erreur inconnue est survenue';
-    if (error.error?.message) {
-      message = error.error.message;
-    } else if (typeof error.error === 'string') {
-      message = error.error;
-    } else if (error.statusText) {
-      message = error.statusText;
-    }
+  /**
+   * INSCRIPTION
+   */
+  register(data: Register): Observable<User> {
+    return this.http.post<User>(`${this.authUrl}/register`, data).pipe(
+        tap((user) => {
+            // Optionnel : connecter l'utilisateur directement après l'inscription
+            this._currentUser.set(user);
+            this.router.navigate(['/profil']);
+        })
+    );
+  }
 
-    console.error(`[UserService] Erreur HTTP: ${message}`, error);
-    return throwError(() => ({
-      status: error.status,
-      message: message
-    }));
+  // --- GESTION DES UTILISATEURS (ADMIN ou PROFIL) ---
+
+  updateProfile(id: string, data: Partial<User>): Observable<User> {
+    return this.http.put<User>(`${this.userUrl}/${id}`, data).pipe(
+      tap(updatedUser => {
+        if (this._currentUser()?.id === updatedUser.id) {
+          this._currentUser.set(updatedUser);
+        }
+      })
+    );
+  }
+
+  getUserById(userId: string): Observable<User> {
+    return this.http.get<User>(`${this.userUrl}/${userId}`);
   }
 }

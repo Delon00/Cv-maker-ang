@@ -1,29 +1,26 @@
-// login.component.ts
 import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
+
+// Services
 import { UserService } from '@services/user.service';
-import { LocalStorageService } from '@services/local-storage.service';
-import { Router,RouterLink } from '@angular/router';
-import FormErrorChecker from '@utils/formErrorChecker';
-import decodeJwt from '@app/utils/decodeJwt';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink]
+  imports: [ReactiveFormsModule, RouterLink, CommonModule]
 })
 export class LoginComponent implements OnInit {
+
   formLogin!: FormGroup;
   errorMessage: string = '';
-  emailError: string = '';
-  passwordError: string = '';
   isLoading: boolean = false;
-
 
   private router = inject(Router);
   private userService = inject(UserService);
-  private localStorage = inject(LocalStorageService);
 
 
   ngOnInit(): void {
@@ -34,38 +31,46 @@ export class LoginComponent implements OnInit {
   }
 
   onLogin() {
+
+    this.errorMessage = '';
+
     if (this.formLogin.valid) {
       this.isLoading = true;
+      
       this.userService.login(this.formLogin.value).subscribe({
         next: (response: any) => {
-          const userPlan = response.user?.plan;
-          if (userPlan === 'admin') {
-            this.router.navigate(['/admin']);
-          } else {
-            this.router.navigate(['/templates']);
-          }
+          // ✅ SUCCÈS : Le cookie est déjà set par le navigateur ici.
+          
+          // Récupération du plan utilisateur pour la redirection
+          // On vérifie d'abord dans la réponse, sinon dans le signal du service
+          const userPlan = response.user?.plan || this.userService.userPlan();
+          
+          const target = userPlan === 'admin' ? '/admin' : '/templates';
+          this.router.navigate([target]);
+          
           this.isLoading = false;
         },
         error: (error: any) => {
-          if (error.status === 400) {
-            this.errorMessage = error.message;
-          } else if (error.status === 401) {
-            this.errorMessage = error.message;
+          this.isLoading = false;
+          
+          // Gestion des erreurs d'authentification (401 Unauthorized / 400 Bad Request)
+          if (error.status === 401 || error.status === 400) {
+            this.errorMessage = "Email ou mot de passe incorrect.";
           } else if (error.status === 500) {
             this.errorMessage = "Erreur serveur, veuillez réessayer plus tard.";
           } else {
-            this.errorMessage = "Échec de la connexion. Veuillez vérifier vos informations.";
-            console.log('Erreur inattendue:', error);
+            this.errorMessage = "Impossible de se connecter. Vérifiez votre réseau.";
           }
-          this.isLoading = false;
         }
       });
     } else {
-      this.errorMessage = "Veuillez remplir correctement le formulaire.";
+      this.formLogin.markAllAsTouched();
+      this.errorMessage = "Veuillez remplir correctement tous les champs.";
     }
   }
 
-  LinkedinLog(){
-
+  LinkedinLog() {
+    console.log('LinkedIn Login initiated');
+    // window.location.href = `${environment.authUrl}/linkedin`;
   }
 }

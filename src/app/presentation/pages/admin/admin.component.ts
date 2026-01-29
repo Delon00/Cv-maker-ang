@@ -19,23 +19,23 @@ export class AdminComponent implements OnInit {
   constructor(private userService: UserService) {}
 
   ngOnInit(): void {
-    this.loadUsers();
+    // this.loadUsers();
   }
 
-  loadUsers() {
-    this.isLoading = true;
-    this.userService.getAllUsers().subscribe({
-      next: (data) => {
-        this.users = data;
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error(err);
-        this.errorMessage = err.message || 'Erreur lors du chargement des utilisateurs.';
-        this.isLoading = false;
-      }
-    });
-  }
+  // loadUsers() {
+  //   this.isLoading = true;
+  //   this.userService.getAllUsers().subscribe({
+  //     next: (data) => {
+  //       this.users = data;
+  //       this.isLoading = false;
+  //     },
+  //     error: (err) => {
+  //       console.error(err);
+  //       this.errorMessage = err.message || 'Erreur lors du chargement des utilisateurs.';
+  //       this.isLoading = false;
+  //     }
+  //   });
+  // }
 
   onView(user: User) {
     console.log('Voir utilisateur:', user);

@@ -1,81 +1,88 @@
-main{
+main {
     padding: 0;
     margin: 0;
     overflow-x: hidden;
-    max-width: 100dvw;
-    background: rgba(0, 0, 0, 0.95);
+    min-height: 100vh;
+    width: 100%;
+    background-color: #050505; // Noir très profond mais pas pur
+    color: white;
+    font-family: 'Inter', sans-serif; // Assurez-vous d'avoir une belle font
+    position: relative;
 
+    // Ajout d'une texture "Noise" pour la qualité (comme Image 1)
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        opacity: 0.05;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        pointer-events: none;
+    }
 
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(0, 0, 0, 0.3);
-
+    // Ajout d'une grille subtile style "Web3"
+    .grid-pattern {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        background-size: 50px 50px;
+        mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+    }
 
     .background-container {
-        position: relative;
+        position: fixed; // Fixed pour que ça bouge avec le scroll de manière fluide
         inset: 0;
-
+        z-index: 0;
+        pointer-events: none;
 
         .circle {
             position: absolute;
-            z-index: 5;
-            top: 400px;
-            left: -250px;
-            width: 35rem;    
-            height: 40rem;
-            border-radius: 9999px;
-            mix-blend-mode: multiply;
-            filter: blur(2rem);  // blur-xl ~ 24px = 2rem
-            // animation: pulse 4s infinite;
-            background-color: #f97316;
-            opacity: 0.6;
-            }
-        .circle2 {
-            position: absolute;
-            z-index: 5;
-            top: -300px;
-            right: -100px;
-            width: 45rem;    
-            height: 45rem;
-            border-radius: 9999px;
-            mix-blend-mode: multiply;
-            filter: blur(2rem);  // blur-xl ~ 24px = 2rem
-            opacity: 0.8;
-            // animation: pulse 4s infinite;
-            background-color: #fba05f;
+            top: 20%;
+            left: 10%;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(249, 115, 22, 0.4) 0%, rgba(0, 0, 0, 0) 70%);
+            filter: blur(80px);
+            animation: float 10s infinite ease-in-out;
         }
 
-                // @keyframes pulse {
-        //     0%, 100% {opacity: 0.06;}
-        //     50% {opacity: 0.09;}
-        // }
-    }
-
-
-
-
-    section{
-
-        .hero{
-            display: flex;
-            height: 100dvh;
-            align-items: center;
-            padding: 1rem;
-
-            .hero-left{
-                flex: 1;
-                padding: 0 20px;
-            }
-            .hero-right{
-                flex: 1;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
+        .circle2 {
+            position: absolute;
+            bottom: 10%;
+            right: 5%;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(251, 160, 95, 0.3) 0%, rgba(0, 0, 0, 0) 70%);
+            filter: blur(100px);
+            animation: float 14s infinite ease-in-out reverse;
         }
     }
 }
 
+// Animation flottante pour les cercles
+@keyframes float {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(20px, -40px); }
+}
 
+// Styles spécifiques pour la carte CV flottante (Nouveau)
+.cv-preview-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    transform: perspective(1000px) rotateY(-12deg) rotateX(5deg);
+    box-shadow: 
+        -20px 20px 60px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+    transition: transform 0.5s ease;
 
-
+    &:hover {
+        transform: perspective(1000px) rotateY(-5deg) rotateX(2deg) scale(1.02);
+        border-color: rgba(249, 115, 22, 0.3);
+    }
+}

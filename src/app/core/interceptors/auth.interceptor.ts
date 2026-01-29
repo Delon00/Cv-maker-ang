@@ -1,30 +1,31 @@
+import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { HttpInterceptorFn } from '@angular/common/http';
-import { LocalStorageService } from '@services/local-storage.service';
 import { Router } from '@angular/router';
-import { catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import { catchError, throwError, EMPTY } from 'rxjs';
+import { environment } from '@environments/environment';
+
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const localStorageService = inject(LocalStorageService);
   const router = inject(Router);
-  const token = localStorageService.getToken();
+  const isApiUrl = req.url.startsWith(environment.apiUrl) || req.url.startsWith(environment.authUrl); 
 
-  let cloned = req;
 
-  if (token) {
-    cloned = req.clone({
-      headers: req.headers.set('Authorization', `Bearer ${token}`)
+  let clonedReq = req;
+
+  if (isApiUrl) {
+    clonedReq = req.clone({
+      withCredentials: true
     });
   }
 
-  return next(cloned).pipe(
-    catchError(err => {
-      if (err.status === 401) {
-        localStorageService.destroyToken();
-        router.navigate(['/login']);
+  return next(clonedReq).pipe(
+    catchError((error: HttpErrorResponse) => {
+      if (error.status === 401) {
+        if (!router.url.includes('/login')) {
+            router.navigate(['/login']);
+        }
       }
-      return throwError(() => err);
+      return throwError(() => error);
     })
   );
 };
