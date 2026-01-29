@@ -8,7 +8,7 @@ export const adminGuard: CanActivateFn = () => {
 
   // 1. On récupère les valeurs des signaux
   const isAuth = userService.isAuthenticated();
-  const plan = userService.userPlan(); // Attention à la casse : userPlan() et pas UserPlan()
+  const plan = userService.userPlan();
 
   // 2. Vérification stricte
   if (isAuth && plan === 'admin') {

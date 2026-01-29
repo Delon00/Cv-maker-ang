@@ -1,85 +1,120 @@
-<main class="min-h-screen bg-gray-50 p-8">
+<div class="admin-layout">
+  <aside class="side-panel" [class.collapsed]="isSidebarCollapsed">
+    <div class="sidebar-header">
+      <div class="logo">
+        <div class="logo-icon">A</div>
+        <span>AdminPanel</span>
+      </div>
+    </div>
 
-    <header class="flex justify-between items-center mb-8">
-        <h1 class="text-3xl font-bold text-gray-800">Dashboard Backoffice</h1>
-        <button type="button" (click)="logout()" class="main-btn">Déconnexion</button>
+    <nav class="sidebar-nav">
+      <div class="nav-group">
+        <span class="group-title">Principal</span>
+        <a routerLink="/admin" 
+           routerLinkActive="active" 
+           [routerLinkActiveOptions]="{exact: true}" 
+           class="nav-item">
+          <i class="pi pi-chart-bar"></i>
+          <span>Dashboard</span>
+        </a>
+        <a routerLink="/admin/users" 
+           routerLinkActive="active" 
+           class="nav-item">
+          <i class="pi pi-users"></i>
+          <span>Utilisateurs</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span class="group-title">Contenu</span>
+        <a routerLink="/admin/templates" 
+           routerLinkActive="active" 
+           class="nav-item">
+          <i class="pi pi-clone"></i>
+          <span>Templates CV</span>
+        </a>
+        <a routerLink="/admin/settings" 
+           routerLinkActive="active" 
+           class="nav-item">
+          <i class="pi pi-cog"></i>
+          <span>Configuration</span>
+        </a>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button (click)="logout()" class="logout-btn">
+        <i class="pi pi-sign-out"></i>
+        <span>Déconnexion</span>
+      </button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    
+    <header class="top-bar">
+      <div class="search-bar">
+        <i class="pi pi-search"></i>
+        <input type="text" placeholder="Rechercher une ressource...">
+      </div>
+      <div class="admin-profile">
+        <div class="text-info">
+          <span class="admin-name">Administrateur</span>
+          <span class="role-badge">Super Admin</span>
+        </div>
+        <div class="avatar">AD</div>
+      </div>
     </header>
 
-
-    <section class="mb-8">
-        <h2 class="text-xl font-semibold text-gray-700 mb-4">Actions rapides</h2>
-        <div class="flex flex-wrap gap-4">
-            <a routerLink="/templates" class="bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg">
-                templates
-            </a>
-        </div>
-    </section>
-
-
-    <section class="bg-white rounded-lg shadow p-6">
-        <div class="container mx-auto p-4">
-            <h1 class="text-2xl font-bold mb-4">Liste des utilisateurs</h1>
-
-            @if (isLoading) {<div class="text-center text-gray-500 my-4">Chargement des utilisateurs...</div>} 
-            @else {
-                @if (errorMessage) {<div class="text-red-600 my-4">{{ errorMessage }}</div>} 
-                @else {
-                    @if (users.length > 0) {<table class="min-w-full text-left text-sm">
-                    <thead class="bg-gray-100 text-gray-700 uppercase text-xs">
-                        <tr>
-                        <th class="px-4 py-2">ID</th>
-                        <th class="px-4 py-2">Nom</th>
-                        <th class="px-4 py-2">Prénom</th>
-                        <th class="px-4 py-2">Email</th>
-                        <th class="px-4 py-2">Plan</th>
-                        <th class="px-4 py-2">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-200">
-                        @for (user of users; track user.id) {
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-4 py-2">{{ user.id }}</td>
-                            <td class="px-4 py-2">{{ user.lastName || '-' }}</td>
-                            <td class="px-4 py-2">{{ user.firstName || '-' }}</td>
-                            <td class="px-4 py-2">{{ user.email }}</td>
-                            <td class="px-4 py-2">
-                            <span 
-                                class="inline-block text-xs px-2 py-1 rounded"
-                                [ngClass]="{
-                                'bg-green-100 text-green-800': user.plan === 'free',
-                                'bg-yellow-100 text-yellow-800': user.plan === 'premium',
-                                'bg-blue-100 text-blue-800': user.plan === 'admin'
-                                }"
-                            >
-                                {{ user.plan }}
-                            </span>
-                            </td>
-                            <td class="px-4 py-2">
-                            <button
-                                class="text-blue-600 hover:text-blue-800 mr-2"
-                                (click)="onView(user)"
-                            >
-                                Voir
-                            </button>
-                            <button
-                                class="text-red-600 hover:text-red-800"
-                                (click)="onDelete(user.id)"
-                            >
-                                Supprimer
-                            </button>
-                            </td>
-                        </tr>
-                        }
-                    </tbody>
-                    </table>
-                } @else {
-                    <div class="text-gray-500 text-center my-4">
-                    Aucun utilisateur trouvé.
-                    </div>
-                }
-                }
-            }
+    <section class="content-wrapper">
+      
+      <router-outlet></router-outlet>
+      
+      @if (isRootPath()) {
+        <div class="dashboard-home-anim">
+          <h2 class="mb-6 text-2xl font-bold">Vue d'ensemble</h2>
+          
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-icon blue"><i class="pi pi-users"></i></div>
+              <div class="kpi-data">
+                <span class="label">Total Utilisateurs</span>
+                <span class="value">{{ userService.adminUsersCount() }}</span>
+              </div>
             </div>
 
+            <div class="kpi-card">
+              <div class="kpi-icon green"><i class="pi pi-check-circle"></i></div>
+              <div class="kpi-data">
+                <span class="label">Templates Actifs</span>
+                <span class="value">12</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-icon orange"><i class="pi pi-bolt"></i></div>
+              <div class="kpi-data">
+                <span class="label">Chiffre d'Affaires</span>
+                <span class="value">1,240€</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="quick-actions-section mt-8">
+             <h3 class="text-lg font-semibold mb-4 text-gray-400">Actions Rapides</h3>
+             <div class="quick-actions-grid">
+                <button class="action-card" (click)="addTemplate()">
+                  <div class="icon-circle"><i class="pi pi-plus"></i></div>
+                  <span>Ajouter un Template</span>
+                </button>
+                <button class="action-card" (click)="goToSettings()">
+                  <div class="icon-circle"><i class="pi pi-cog"></i></div>
+                  <span>Paramètres Système</span>
+                </button>
+             </div>
+          </div>
+        </div>
+      }
     </section>
-</main>
+  </main>
+</div>

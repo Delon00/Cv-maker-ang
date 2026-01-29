@@ -1,70 +1,40 @@
 import { Routes } from '@angular/router';
-
-// Guards
 import { authGuard } from '@guards/auth.guard';
 import { adminGuard } from '@guards/admin.guard';
-import { guestGuard } from '@guards/guest.guard'; // On garde que celui-ci pour le public
-
-// Components
-import { HomeComponent } from '@pages/home/home.component';
-import { DashboardComponent } from '@pages/dashboard/dashboard.component';
-import { LoginComponent } from '@pages/auth/login/login.component';
-import { RegisterComponent } from '@pages/auth/register/register.component';
-import { NotFoundComponent } from '@pages/errors/not-found/not-found.component';
-import { AdminComponent } from '@pages/admin/admin.component';
-import { TemplatesComponent } from '@pages/templates/templates.component';
-import { CvEditorComponent } from '@pages/cv-editor/cv-editor.component';
-import { SimpleComponent } from '@pages/templates/cvs/simple/simple.component';
+import { guestGuard } from '@guards/guest.guard';
 
 export const routes: Routes = [
-    // ----------------------------------------------------------------
-    // 1. ZONE PUBLIQUE (Accessible par tout le monde)
-    // ----------------------------------------------------------------
-    // Note : Le guestGuard ici signifie "Si connecté, redirige vers Dashboard".
-    // Si tu veux que la Home soit accessible même connecté (Landing Page), retire le guestGuard.
-    { path: '', component: HomeComponent, canActivate: [guestGuard] },
-    
-    { path: 'templates', component: TemplatesComponent },
-    { path: 'simple', component: SimpleComponent },
+  // --- ZONE PUBLIQUE ---
+    { path: '', loadComponent: () => import('@pages/home/home.component').then(m => m.HomeComponent)},
+    { path: 'templates', loadComponent: () => import('@pages/templates/templates.component').then(m => m.TemplatesComponent) },
+    { path: 'simple', loadComponent: () => import('@pages/templates/cvs/simple/simple.component').then(m => m.SimpleComponent) },
 
-    // ----------------------------------------------------------------
-    // 2. ZONE INVITÉ (Login/Register accessible UNIQUEMENT si NON connecté)
-    // ----------------------------------------------------------------
-    {
-        path: '',
-        canActivate: [guestGuard], // Bloque l'accès si déjà connecté
+    // --- ZONE INVITÉ (Login/Register) ---
+    {path: '',canActivate: [guestGuard],
         children: [
-            { path: 'login', component: LoginComponent },
-            { path: 'register', component: RegisterComponent },
+            { path: 'login', loadComponent: () => import('@pages/auth/login/login.component').then(m => m.LoginComponent) },
+            { path: 'register', loadComponent: () => import('@pages/auth/register/register.component').then(m => m.RegisterComponent) },
         ]
     },
 
-    // ----------------------------------------------------------------
-    // 3. ZONE MEMBRE (Accessible UNIQUEMENT si connecté)
-    // ----------------------------------------------------------------
-    {
-        path: '',
-        canActivate: [authGuard], // Bloque l'accès si pas connecté
+    // --- ZONE MEMBRE ---
+    {path: '',canActivate: [authGuard],
         children: [
-            { path: 'profil', component: DashboardComponent }, 
-            { path: 'cv-editor/:templateId', component: CvEditorComponent },
+            { path: 'profil', loadComponent: () => import('@pages/dashboard/dashboard.component').then(m => m.DashboardComponent) },
+            { path: 'cv-editor/:templateId', loadComponent: () => import('@pages/cv-editor/cv-editor.component').then(m => m.CvEditorComponent) },
         ]
     },
 
-    // ----------------------------------------------------------------
-    // 4. ZONE ADMIN
-    // ----------------------------------------------------------------
+    // --- ZONE ADMIN ---
+    {path: 'admin',canActivate: [adminGuard],loadComponent: () => import('@pages/admin/admin.component').then(m => m.AdminComponent),
+        children: [
+            { path: 'users', loadComponent: () => import('./presentation/pages/admin/admin-users/admin-users.component').then(m => m.AdminUsersComponent) }
+        ]
+    },
+
+    // --- WILDCARD ---
     { 
-        path: 'admin', 
-        component: AdminComponent, 
-        canActivate: [authGuard, adminGuard], // Double sécurité
-        children: [
-            // { path: 'users', component: AdminUsersComponent }
-        ]
+        path: '**', 
+        loadComponent: () => import('@pages/errors/not-found/not-found.component').then(m => m.NotFoundComponent) 
     },
-
-    // ----------------------------------------------------------------
-    // 5. WILDCARD
-    // ----------------------------------------------------------------
-    { path: '**', component: NotFoundComponent },
 ];

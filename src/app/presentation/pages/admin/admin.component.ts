@@ -1,51 +1,47 @@
-import { Component, OnInit } from '@angular/core';
-import { UserService } from '@services/user.service';
-import  User  from '@interfaces/user.interface';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { UserService } from '@services/user.service';
 
 @Component({
   selector: 'app-admin',
-  templateUrl: './admin.component.html',
-  styleUrls: ['./admin.component.scss'],
   standalone: true,
-  imports:[CommonModule, RouterLink],
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
+  templateUrl: './admin.component.html',
+  styleUrls: ['./admin.component.scss']
 })
 export class AdminComponent implements OnInit {
-  users: User[] = [];
-  isLoading = false;
-  errorMessage = '';
 
-  constructor(private userService: UserService) {}
+  public userService = inject(UserService);
+  private router = inject(Router);
+
+  isSidebarCollapsed = false;
 
   ngOnInit(): void {
-    // this.loadUsers();
+
+    this.userService.loadAllUsers();
   }
 
-  // loadUsers() {
-  //   this.isLoading = true;
-  //   this.userService.getAllUsers().subscribe({
-  //     next: (data) => {
-  //       this.users = data;
-  //       this.isLoading = false;
-  //     },
-  //     error: (err) => {
-  //       console.error(err);
-  //       this.errorMessage = err.message || 'Erreur lors du chargement des utilisateurs.';
-  //       this.isLoading = false;
-  //     }
-  //   });
-  // }
-
-  onView(user: User) {
-    console.log('Voir utilisateur:', user);
+  /**
+   * Vérifie si on est sur la racine /admin pour afficher les KPI
+   * Si on est sur /admin/users, cette fonction retourne false
+   */
+  isRootPath(): boolean {
+    const urlTree = this.router.parseUrl(this.router.url);
+    const urlWithoutParams = '/' + urlTree.root.children['primary']?.segments.map(it => it.path).join('/');
+    
+    return urlWithoutParams === '/admin';
   }
 
-  onDelete(userId: string) {
-    console.log('Supprimer utilisateur ID:', userId);
-    this.users = this.users.filter(u => u.id !== userId);
+  addTemplate() {
+    console.log('Ouverture modal ajout template...');
   }
 
-  logout() {this.userService.logout();}
+  goToSettings() {
+    this.router.navigate(['/admin/settings']);
+  }
 
+  logout() {
+    this.userService.logout();
+  }
 }
