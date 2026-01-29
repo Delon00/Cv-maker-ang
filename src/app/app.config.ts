@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { lastValueFrom } from 'rxjs'; // ⚠️ Important pour attendre la fin de l'init
+import { lastValueFrom } from 'rxjs';
 
 // PrimeNG
 import { providePrimeNG } from 'primeng/config';
@@ -34,7 +34,6 @@ export const appConfig: ApplicationConfig = {
     providePrimeNG({ theme: { preset: Aura } }),
 
     // --- INITIALISATION AUTH (CRITIQUE) ---
-    // On utilise provideAppInitializer pour bloquer le démarrage tant qu'on ne sait pas si l'user est connecté.
     provideAppInitializer(() => {
         const userService = inject(UserService);
         return lastValueFrom(userService.fetchMe());

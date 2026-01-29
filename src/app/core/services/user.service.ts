@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { Observable, tap, of, catchError, map } from 'rxjs';
 import { environment } from '@environments/environment';
 
-// Assure-toi que ces interfaces existent et correspondent à ton DTO backend
 import User from '@interfaces/user.interface';
 import Login from '@interfaces/login.interface';
 import Register from '@interfaces/register.interface';
@@ -36,13 +35,16 @@ export class UserService {
    * Appelé au démarrage de l'app (APP_INITIALIZER).
    * Vérifie si le cookie HttpOnly est valide et récupère l'utilisateur.
    */
+
   fetchMe(): Observable<User | null> {
     return this.http.get<User>(`${this.authUrl}/me`, { withCredentials: true }).pipe(
       tap((user) => {
-        console.log('Session restaurée pour :', user.email);
+        console.log('✅ Session restaurée :', user);
         this._currentUser.set(user);
       }),
       catchError((err) => {
+        // AJOUTE CE LOG POUR VOIR L'ERREUR DANS LA CONSOLE DU NAVIGATEUR
+        console.error('❌ Erreur FetchMe (Cookie rejeté ou absent) :', err); 
         this._currentUser.set(null);
         return of(null);
       })
@@ -54,10 +56,9 @@ export class UserService {
    */
   login(credentials: Login): Observable<User> {
     return this.http.post<{ user: User }>(`${this.authUrl}/login`, credentials).pipe(
-      map(response => response.user), // On extrait l'user de la réponse
+      map(response => response.user),
       tap((user) => {
         this._currentUser.set(user);
-        // Redirection intelligente
         const target = user.plan === 'admin' ? '/admin' : '/profil';
         this.router.navigate([target]);
       })

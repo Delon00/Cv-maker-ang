@@ -66,10 +66,28 @@
                         @if (formLogin.get('password')?.invalid && formLogin.get('password')?.touched) {
                             <span class="field-error">Le mot de passe est requis.</span>
                         }
+                    </div>
 
-                        <div class="flex justify-end mt-1">
-                            <a href="#" class="text-xs text-orange-400 hover:text-orange-300 transition-colors">Mot de passe oublié ?</a>
+                    <div class="flex items-center justify-between mt-1">
+                        
+                        <div class="flex items-center gap-2">
+                            <div class="relative flex items-center">
+                                <input 
+                                    type="checkbox" 
+                                    id="rememberMe" 
+                                    formControlName="rememberMe"
+                                    class="peer h-4 w-4 cursor-pointer appearance-none rounded border border-gray-600 bg-white/5 checked:border-orange-500 checked:bg-orange-500 transition-all hover:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20"
+                                >
+                                <i class="pi pi-check absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[10px] text-white opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity"></i>
+                            </div>
+                            <label for="rememberMe" class="text-sm text-gray-400 cursor-pointer select-none hover:text-gray-300 transition-colors">
+                                Se souvenir de moi
+                            </label>
                         </div>
+
+                        <a href="#" class="text-xs text-orange-400 hover:text-orange-300 transition-colors">
+                            Mot de passe oublié ?
+                        </a>
                     </div>
 
                     <button type="submit" class="submit-btn" [disabled]="isLoading">

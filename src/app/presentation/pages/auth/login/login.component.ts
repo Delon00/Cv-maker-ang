@@ -27,6 +27,7 @@ export class LoginComponent implements OnInit {
     this.formLogin = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required]),
+      rememberMe: new FormControl(false)
     });
   }
 
@@ -39,10 +40,6 @@ export class LoginComponent implements OnInit {
       
       this.userService.login(this.formLogin.value).subscribe({
         next: (response: any) => {
-          // ✅ SUCCÈS : Le cookie est déjà set par le navigateur ici.
-          
-          // Récupération du plan utilisateur pour la redirection
-          // On vérifie d'abord dans la réponse, sinon dans le signal du service
           const userPlan = response.user?.plan || this.userService.userPlan();
           
           const target = userPlan === 'admin' ? '/admin' : '/templates';
@@ -53,7 +50,7 @@ export class LoginComponent implements OnInit {
         error: (error: any) => {
           this.isLoading = false;
           
-          // Gestion des erreurs d'authentification (401 Unauthorized / 400 Bad Request)
+
           if (error.status === 401 || error.status === 400) {
             this.errorMessage = "Email ou mot de passe incorrect.";
           } else if (error.status === 500) {
@@ -71,6 +68,5 @@ export class LoginComponent implements OnInit {
 
   LinkedinLog() {
     console.log('LinkedIn Login initiated');
-    // window.location.href = `${environment.authUrl}/linkedin`;
   }
 }
